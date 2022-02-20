@@ -1,0 +1,10 @@
+{
+    "terminal.integrated.defaultProfile.windows": "Ubuntu-18.04 (WSL)",
+    "blade.format.enable": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "[blade]": {
+        "editor.defaultFormatter": "onecentlin.laravel-blade"
+    },
+    "html.format.wrapLineLength": 0,
+}
