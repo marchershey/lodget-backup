@@ -9,21 +9,30 @@ module.exports = {
     ],
     theme: {
         extend: {
-            // colors: {
-            //     gray: colors.gray,
-            //     muted: colors.gray[400],
-            //     primary: {
-            //         DEFAULT: colors.blue[600],
-            //         lighter: colors.blue[500],
-            //         lightest: colors.blue[300],
-            //         darker: colors.blue[800],
-            //         hover: colors.blue[700],
-            //         muted: colors.blue[300],
-            //     },
-            // },
-            // fontFamily: {
-            //     sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-            // },
+            fontFamily: {
+                sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                primary: {
+                    DEFAULT: colors.blue[600],
+                    // lighter: colors.blue[400],
+                    darker: colors.blue[800],
+                },
+                muted: {
+                    DEFAULT: colors.gray[500],
+                    lighter: colors.gray[300],
+                },
+                dark: colors.gray[800],
+                // gray: colors.gray,
+                // primary: {
+                //     DEFAULT: colors.blue[600],
+                //     lighter: colors.blue[500],
+                //     lightest: colors.blue[300],
+                //     darker: colors.blue[800],
+                //     hover: colors.blue[700],
+                //     muted: colors.blue[300],
+                // },
+            },
             // lineClamp: {
             //     7: '7',
             //     8: '8',
@@ -31,10 +40,14 @@ module.exports = {
             //     10: '10',
             // }
         },
+        variants: {
+            backgroundColor: ['children-disabled'],
+        },
     },
 
     plugins: [
-        // require('@tailwindcss/forms'),
+        require('@tailwindcss/forms'),
+
         // require('@tailwindcss/aspect-ratio'),
         // require('@tailwindcss/line-clamp'),
     ],
