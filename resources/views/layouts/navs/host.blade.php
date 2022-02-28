@@ -9,15 +9,15 @@
         Dashboard
     </a>
 
-    <a href="#" class="{{ (request()->is('host/reservations*')) ? 'nav-active' : 'nav-default' }}">
+    <a href="{{ route('host.reservations') }}" class="{{ (request()->is('host/reservations*')) ? 'nav-active' : 'nav-default' }}">
         <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"></path>
-            <rect x="9" y="3" width="6" height="4" rx="2"></rect>
-            <line x1="9" y1="12" x2="9.01" y2="12"></line>
-            <line x1="13" y1="12" x2="15" y2="12"></line>
-            <line x1="9" y1="16" x2="9.01" y2="16"></line>
-            <line x1="13" y1="16" x2="15" y2="16"></line>
+            <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+            <line x1="16" y1="3" x2="16" y2="7"></line>
+            <line x1="8" y1="3" x2="8" y2="7"></line>
+            <line x1="4" y1="11" x2="20" y2="11"></line>
+            <line x1="11" y1="15" x2="12" y2="15"></line>
+            <line x1="12" y1="15" x2="12" y2="18"></line>
         </svg>
         Reservations
     </a>

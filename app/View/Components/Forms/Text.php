@@ -7,6 +7,8 @@ use Illuminate\View\Component;
 class Text extends Component
 {
     public $wireId;
+    public $wireTarget;
+    public $inputType;
     public $inputClass;
     public $label;
     public $placeholder;
@@ -17,9 +19,11 @@ class Text extends Component
      *
      * @return void
      */
-    public function __construct($wireId = null, $inputClass = null, $label = null, $placeholder = null, $description = null)
+    public function __construct($wireId = null, $wireTarget = null, $inputType = "text", $inputClass = null, $label = null, $placeholder = null, $description = null)
     {
         $this->wireId = $wireId ?? false;
+        $this->wireTarget = $wireTarget . ", submit";
+        $this->inputType = $inputType;
         $this->inputClass = $inputClass;
         $this->label = $label;
         $this->placeholder = $placeholder ?? $label;

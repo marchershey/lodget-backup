@@ -4,14 +4,12 @@ namespace App\View\Components\Forms;
 
 use Illuminate\View\Component;
 
-class Select extends Component
+class Color extends Component
 {
-    public $options;
     public $wireId;
     public $wireTarget;
     public $inputClass;
     public $label;
-    public $placeholder;
     public $description;
 
     /**
@@ -19,14 +17,12 @@ class Select extends Component
      *
      * @return void
      */
-    public function __construct($options, $wireId = null, $wireTarget = null, $inputClass = null, $label = null, $placeholder = null, $description = null)
+    public function __construct($wireId = null, $wireTarget = "submit", $inputClass = null, $label = null, $description = null)
     {
-        $this->options = $options;
         $this->wireId = $wireId ?? false;
-        $this->wireTarget = $wireTarget . ", submit";
+        $this->wireTarget = $wireTarget;
         $this->inputClass = $inputClass;
         $this->label = $label;
-        $this->placeholder = $placeholder ?? $label;
         $this->description = $description;
     }
 
@@ -37,6 +33,6 @@ class Select extends Component
      */
     public function render()
     {
-        return view('components.forms.select');
+        return view('components.forms.color');
     }
 }

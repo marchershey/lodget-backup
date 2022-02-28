@@ -86,16 +86,31 @@
 
             <main class="flex-1 min-h-full bg-gray-100">
                 <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 md:px-8">
-                    <div class="flex items-baseline justify-between">
-                        @if(isset($title))
-                        <h1 {{ $title->attributes->class(['text-2xl font-semibold text-gray-900 mb-5']) }}>{{ $title }}</h1>
-                        @endif
-                        @if(isset($action))
-                        <div {{ $action->attributes->class(['']) }}>{{ $action }}</div>
-                        @endif
+                    @if(isset($title) || isset($goback) || isset($action))
+                    <div class="mb-5">
+                        <div class="flex items-baseline justify-between">
+                            <div class="flex items-center mb-5 space-x-3">
+                                @if(isset($goback))
+                                <a href="{{ url()->previous() }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mt-1 w-7 h-7 icon text-muted" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <polyline points="15 6 9 12 15 18"></polyline>
+                                    </svg>
+                                </a>
+                                @endif
+                                @if(isset($title))
+                                <h1 {{ $title->attributes->class(['text-2xl font-semibold text-gray-900 block align-baseline']) }}>{{ $title }}</h1>
+                                @endif
+                            </div>
+
+                            @if(isset($action))
+                            <div {{ $action->attributes->class(['']) }}>{{ $action }}</div>
+                            @endif
+                        </div>
+                        <hr>
                     </div>
-                    <hr>
-                    <div class="mt-5">
+                    @endif
+                    <div class="">
                         {{ $slot }}
                     </div>
                 </div>

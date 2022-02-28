@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 class Textarea extends Component
 {
     public $wireId;
+    public $wireTarget;
     public $inputClass;
     public $label;
     public $placeholder;
@@ -19,9 +20,10 @@ class Textarea extends Component
      *
      * @return void
      */
-    public function __construct($wireId = null, $inputClass = null, $label = null, $placeholder = null, $description = null, $rows = 4, $cols = 4)
+    public function __construct($wireId = null, $wireTarget = null, $inputClass = null, $label = null, $placeholder = null, $description = null, $rows = 4, $cols = 4)
     {
         $this->wireId = $wireId ?? false;
+        $this->wireTarget = $wireTarget . ", submit";
         $this->inputClass = $inputClass;
         $this->label = $label;
         $this->placeholder = $placeholder ?? $label;

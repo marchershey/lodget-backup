@@ -3,11 +3,13 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('https://www.facebook.com/OHANA-Burnside-1416857558456870/', 302);
 });
 
 Route::name('host.')->prefix('host')->group(function () {
     Route::view('/', 'pages.host.dashboard')->name('dashboard');
+
+    Route::view('/reservations', 'pages.host.reservations')->name('reservations');
 
     Route::name('properties.')->prefix('properties')->group(function () {
         Route::view('/', 'pages.host.properties.index')->name('index');

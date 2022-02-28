@@ -3,7 +3,7 @@
         Dashboard
     </x-slot:title>
 
-    <div class="flex flex-col space-y-5">
+    <div class="section-spacing">
         {{-- Recent Reservations --}}
         <div class="section">
             <x-heading>Recent Reservations</x-heading>
