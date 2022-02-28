@@ -1,0 +1,1 @@
+<h2 {{ $attributes->class('text-heading') }}>{{ $slot }}</h2>

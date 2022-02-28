@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+    [x-cloak] { display: none !important; }
+    
+    /* Typography */
+    .text-link {
+        @apply font-medium cursor-pointer text-primary hover:text-primary-darker;
+    }
+    .text-bold {
+        @apply font-medium text-dark;
+    }
+    .text-heading {
+        @apply text-lg font-medium;
+    }
+
+    /* Navigation */
+    .nav-default {
+        @apply flex items-center px-2 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white;
+    }
+    .nav-active {
+        @apply flex items-center px-2 py-2 text-sm font-medium text-white bg-gray-900 rounded-md;
+    }
+}
+
+@layer components {
+    /* Elements */
+    .section {
+        @apply flex flex-col space-y-3;
+    }
+    .section-spacing {
+        @apply flex flex-col space-y-10
+    }
+    .panel {
+        @apply p-5 bg-white border border-gray-300 rounded shadow-lg;
+    }
+    
+    /* Tables */
+    .tables {
+        @apply p-0 overflow-hidden overflow-x-auto text-xs rounded-lg panel text-muted md:text-sm lg:text-base;
+    }
+    .tables table {
+        @apply min-w-full divide-y divide-gray-200;
+    }
+    .tables th {
+        @apply px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50;
+    }
+    .tables tr {
+        @apply odd:bg-white even:bg-gray-50;
+    }
+    .tables td {
+        @apply px-6 py-4 whitespace-nowrap last:text-right;
+    }
+
+    /* Badges */
+    .badge {
+        @apply px-2 py-1 text-xs font-medium rounded;
+    }
+    .badge-green {
+        @apply text-green-600 bg-green-100;
+    }
+    .badge-yellow {
+        @apply text-yellow-600 bg-yellow-100;
+    }
+    .badge-gray {
+        @apply text-gray-800 bg-gray-200;
+    }
+    .badge-red {
+        @apply text-red-100 bg-red-600;
+    }
+
+    /* Buttons */
+    .button {
+        @apply inline-block px-3 py-3 md:py-1.5 text-sm md:text-base font-medium rounded cursor-pointer w-full md:w-auto;
+    }
+    .button-blue {
+        @apply text-white bg-blue-600 hover:bg-blue-700;
+    }
+    .button-gray {
+        @apply text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-800;
+    }
+
+    /* Images */
+    /* .image {
+        @apply 
+    } */
+}
+
+@layer utilities {
+    .icon {
+        @apply flex-shrink-0;
+    }
+}
