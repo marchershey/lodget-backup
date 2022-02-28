@@ -158,13 +158,13 @@ class CreateProperty extends Component
         // Photos
         if($this->stagedPhotos){
             foreach($this->stagedPhotos as $stagedPhoto){
-                $photo = new $photo
+                // $photo = new $photo
             }
         }
     }
 
     public function test()
     {
-        dd('test');
+        // dd('test');
     }
 }
