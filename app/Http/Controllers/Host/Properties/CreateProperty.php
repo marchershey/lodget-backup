@@ -184,5 +184,7 @@ class CreateProperty extends Component
                 $photo->save();
             }
         }
+
+        // redirect to new listing
     }
 }
