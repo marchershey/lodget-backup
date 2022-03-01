@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Host\Properties;
 
 use App\Models\Amenity;
+use App\Models\Photo;
 use App\Models\Property;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -24,6 +25,10 @@ class CreateProperty extends Component
     // listing information
     public $listing_headline;
     public $listing_description;
+    public $guest_count = 1;
+    public $bedroom_count = 0;
+    public $bed_count = 0;
+    public $bathroom_count = 0;
 
     // pricing information
     public $rate;
@@ -49,6 +54,10 @@ class CreateProperty extends Component
         'address_zip' => 'required|size:5',
         'listing_headline' => 'required|max:250',
         'listing_description' => 'required|max:65535',
+        'guest_count' => 'required',
+        'bedroom_count' => 'required',
+        'bed_count' => 'required',
+        'bathroom_count' => 'required',
         'rate' => 'required|max:250',
         'tax_rate' => 'required|max:250',
         'fees.*.name' => 'required_unless:fees,null|max:250',
@@ -127,7 +136,7 @@ class CreateProperty extends Component
 
     public function submit()
     {
-        // $this->validate();
+        $this->validate();
 
         // Property
         $property = new Property();
@@ -138,12 +147,15 @@ class CreateProperty extends Component
         $property->addresS_zip = $this->address_zip;
         $property->listing_headline = $this->listing_headline;
         $property->listing_description = $this->listing_description;
+        $property->guest_count = $this->guest_count;
+        $property->bedroom_count = $this->bedroom_count;
+        $property->bed_count = $this->bed_count;
+        $property->bathroom_count = $this->bathroom_count;
         $property->rate = $this->rate;
         $property->tax_rate = $this->tax_rate;
         $property->calendar_color = $this->calendar_color;
         $property->user_id = 1;
         $property->save();
-        // $this->property = $property;
 
         // Amenities
         if($this->amenities){
@@ -158,13 +170,21 @@ class CreateProperty extends Component
         // Photos
         if($this->stagedPhotos){
             foreach($this->stagedPhotos as $stagedPhoto){
-                // $photo = new $photo
+                // upload photo
+                $path = $stagedPhoto->store('photos', 'public');
+
+                // store photo in database
+                $photo = new Photo();
+                $photo->property_id = $property->id;
+                $photo->user_id = 1;
+                $photo->name = $stagedPhoto->getClientOriginalName();
+                $photo->size = $stagedPhoto->getSize();
+                $photo->mime = $stagedPhoto->getMimeType();
+                $photo->path = $path;
+                $photo->save();
             }
         }
-    }
 
-    public function test()
-    {
-        // dd('test');
+        // redirect to new listing
     }
 }
