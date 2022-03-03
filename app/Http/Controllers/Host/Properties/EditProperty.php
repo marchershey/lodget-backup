@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Host\Properties;
 
 use App\Models\Amenity;
-use App\Models\Fee;
 use App\Models\Photo;
 use App\Models\Property;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class CreateProperty extends Component
+class EditProperty extends Component
 {
     use WithFileUploads;
 
@@ -17,6 +16,7 @@ class CreateProperty extends Component
     public $ready = true;
 
     // property information
+    public $property_id;
     public $name;
     public $address_street;
     public $address_city;
@@ -66,48 +66,17 @@ class CreateProperty extends Component
         'fees.*.type' => 'required_unless:fees,null|max:250',
         'amenities' => "",
         'stagedPhotos' => 'required',
-        'stagedPhotos.*' => 'image|max:12288', // not needed i guess? 
+        'stagedPhotos.*' => 'image|max:5120',
         'calendar_color' => 'required|size:7',
     ];
 
     public function render()
     {
-        return view('pages.host.properties.create')->layout('layouts.host-dashboard');
+        return view('pages.host.properties.edit')->layout('layouts.host-dashboard');
     }
-    public function mount()
+    public function mount($id)
     {
-        $this->name = "Ohana Burnside";
-        $this->address_street = "123 address ave";
-        $this->address_city = "lexington";
-        $this->address_state = "KY";
-        $this->address_zip = "10001";
-        $this->listing_headline = "a beautiful place to stay";
-        $this->listing_description = "What a wonderful place to stay - What a wonderful place to stay - What a wonderful place to stay - What a wonderful place to stay";
-        $this->guest_count = 0;
-        $this->bedroom_count = 4;
-        $this->bed_count = 8;
-        $this->bathroom_count = 2.5;
-        $this->rate = 379.04;
-        $this->tax_rate = 7;
-        $this->fees = [
-            [
-                'name' => 'Cleaning Fee',
-                'amount' => 175,
-                'type' => 'fixed',
-            ],
-            [
-                'name' => 'Service Fee',
-                'amount' => 10,
-                'type' => 'percentage',
-            ],
-
-        ];
-        $this->amenities = [
-            'garage',
-            'kitchen',
-            'swimming pool',
-        ];
-        $this->calendar_color = "#ff6700";
+        $this->property_id = $id;
     }
     public function updating()
     {
@@ -119,6 +88,46 @@ class CreateProperty extends Component
             $this->validateOnly($field);
         }
         $this->ready = true;
+    }
+
+    /**
+     * Load the property
+     * I have this on a seperate function to 
+     * allow the page to load quickly, then 
+     * load the property data.
+     */
+    public function load()
+    {
+        if ($property = Property::find($this->property_id)) {
+            $this->name = "Ohana Burnside";
+            $this->address_street = "123 address ave";
+            $this->address_city = "lexington";
+            $this->address_state = "KY";
+            $this->address_zip = "10001";
+            $this->listing_headline = "a beautiful place to stay";
+            $this->listing_description = "What a wonderful place to stay - What a wonderful place to stay - What a wonderful place to stay - What a wonderful place to stay";
+            $this->guest_count = 8;
+            $this->bedroom_count = 4;
+            $this->bed_count = 8;
+            $this->bathroom_count = 2.5;
+            $this->rate = 379.04;
+            $this->tax_rate = 7;
+
+            if ($fees = $property->fees()->get(['name', 'amount', 'type'])->toArray()) {
+                $this->fees = $fees;
+            }
+
+            if ($amenities = $property->amenities()->get('text')->toArray()) {
+                foreach ($amenities as $amenity) {
+                    $this->amenities[] = $amenity;
+                }
+                // dd($amenities);
+                // dd(array_values($amenities));
+                // $this->amenities = array_values($amenities);
+            }
+
+            $this->calendar_color = "#ff6700";
+        }
     }
 
     /**
@@ -162,10 +171,6 @@ class CreateProperty extends Component
     /**
      * Photos
      */
-    public function updatedStagedPhotos()
-    {
-        $this->validateOnly('stagedPhotos.*');
-    }
     public function removeStagedPhoto($key)
     {
         unset($this->stagedPhotos[$key]);
@@ -178,6 +183,8 @@ class CreateProperty extends Component
     public function submit()
     {
         $this->validate();
+
+        dd($this->stagedPhotos);
 
         // Property
         $property = new Property();
@@ -198,18 +205,6 @@ class CreateProperty extends Component
         $property->user_id = 1;
         $property->save();
 
-        if ($this->fees) {
-            foreach ($this->fees as $fee) {
-                $newFee = new Fee();
-                $newFee->name = $fee['name'];
-                $newFee->amount = $fee['amount'];
-                $newFee->type = $fee['type'];
-                $newFee->property_id = $property->id;
-                $newFee->user_id = 1;
-                $newFee->save();
-            }
-        }
-
         // Amenities
         if ($this->amenities) {
             foreach ($this->amenities as $text) {
@@ -217,7 +212,6 @@ class CreateProperty extends Component
                 $amenity->text = $text;
                 $amenity->property_id = $property->id;
                 $amenity->user_id = 1;
-                $amenity->save();
             }
         }
 
@@ -240,6 +234,5 @@ class CreateProperty extends Component
         }
 
         // redirect to new listing
-        return redirect()->route('host.properties.index');
     }
 }

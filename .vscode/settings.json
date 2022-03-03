@@ -11,5 +11,8 @@
     "html.format.wrapLineLength": 0,
     "bladeFormatter.format.wrapLineLength": 9999,
     "headwind.prependCustomClasses": true,
-    "bladeFormatter.format.sortTailwindcssClasses": true
+    "bladeFormatter.format.sortTailwindcssClasses": true,
+    "[php]": {
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    }
 }

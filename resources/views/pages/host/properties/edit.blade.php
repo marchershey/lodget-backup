@@ -1,7 +1,7 @@
-<div>
+<div wire:init="load">
     <x-slot:goback></x-slot:goback>
     <x-slot:title>
-        Add New Property
+        Edit Property
     </x-slot:title>
 
     <div class="section-spacing">
@@ -260,7 +260,8 @@
         </div>
 
         <div class="flex justify-end" x-data="{ready: @entangle('ready')}">
-            <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-blue' : 'button-gray'" class="button">Save Property</button>
+            <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-blue' : 'button-gray'" class="button">Update Property</button>
+            <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-red-link' : 'button-gray'" class="button">Delete Property</button>
         </div>
     </div>
 

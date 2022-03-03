@@ -16,7 +16,7 @@
 </head>
 
 <body class="h-full">
-    <div class="fixed bottom-0 right-0 z-50 bg-white px-1 text-xs">
+    <div class="fixed bottom-0 right-0 z-50 bg-red-500 px-1 text-xs text-white">
         <div class="sm:hidden">xs</div>
         <div class="hidden sm:block md:hidden">sm</div>
         <div class="hidden md:block lg:hidden">md</div>
@@ -29,6 +29,10 @@
 
     @livewireScripts
     @stack('scripts')
+
+    @if (app()->isLocal())
+        <script src="{{ config('app.url') }}:3000/browser-sync/browser-sync-client.js"></script>
+    @endif
 </body>
 
 </html>

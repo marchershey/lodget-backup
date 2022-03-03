@@ -2,13 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-    [x-cloak] { display: none !important; }
-    
+    [x-cloak] {
+        display: none !important;
+    }
+
     /* Typography */
     .text-link {
-        @apply font-medium cursor-pointer text-primary hover:text-primary-darker;
+        @apply font-medium cursor-pointer text-primary hover:text-primary-darker group-hover:text-primary-darker;
     }
     .text-bold {
         @apply font-medium text-dark;
@@ -32,12 +33,12 @@
         @apply flex flex-col space-y-3;
     }
     .section-spacing {
-        @apply flex flex-col space-y-10
+        @apply flex flex-col space-y-10;
     }
     .panel {
-        @apply p-5 bg-white border border-gray-300 rounded shadow-lg;
+        @apply p-5 bg-white border border-gray-300 rounded-lg shadow-lg;
     }
-    
+
     /* Tables */
     .tables {
         @apply p-0 overflow-hidden overflow-x-auto text-xs rounded-lg panel text-muted md:text-sm lg:text-base;
@@ -75,6 +76,12 @@
     /* Buttons */
     .button {
         @apply inline-block px-3 py-3 md:py-1.5 text-sm md:text-base font-medium rounded cursor-pointer w-full md:w-auto;
+    }
+    .button-red {
+        @apply text-white bg-red-600 hover:bg-red-700;
+    }
+    .button-red-link {
+        @apply text-red-500 bg-transparent hover:text-red-700;
     }
     .button-blue {
         @apply text-white bg-blue-600 hover:bg-blue-700;

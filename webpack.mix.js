@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+const mix = require("laravel-mix");
 
 /*
  |--------------------------------------------------------------------------
@@ -12,25 +12,24 @@ const mix = require('laravel-mix');
  */
 
 mix.js("resources/js/app.js", "public/js")
-    .postCss("resources/css/app.css", "public/css", [
-        require("tailwindcss"),
-    ]).browserSync({
-        proxy: 'localhost',
+    .postCss("resources/css/app.css", "public/css", [require("tailwindcss")])
+    .browserSync({
+        proxy: "10.0.0.17",
         open: false,
         notify: false,
     });
-    // .webpackConfig({
-    //     devServer: {
-    //         proxy: {
-    //             '*': 'http://localhost:3000'
-    //         }
-    //     },
-    // })
+//     .webpackConfig({
+//         devServer: {
+//             proxy: {
+//                 "*": "http://localhost:3000",
+//             },
+//         },
+//     });
 
 // // This sets your HMR host and port to the device running `php artisan serve`
-// mix.options({
-//     hmrOptions: {
-//         host: 'dev.hershey.co', // set this to the local ip address (192.168.0.**) of whatever device is running `php artisan serve`
-//         port: 80 // set this to which port `php artisan serve` is using.
-//     }
-// })
+mix.options({
+    hmrOptions: {
+        host: "10.0.0.17", // set this to the local ip address (192.168.0.**) of whatever device is running `php artisan serve`
+        port: 80, // set this to which port `php artisan serve` is using.
+    },
+});
