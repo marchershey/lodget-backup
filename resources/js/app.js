@@ -55,27 +55,13 @@ import { Calendar } from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
-// import timeGridPlugin from "@fullcalendar/timegrid";
-// import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
-// import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 window.Calendar = Calendar;
 window.interactionPlugin = interactionPlugin;
 window.dayGridPlugin = dayGridPlugin;
 window.listPlugin = listPlugin;
-// window.timeGridPlugin = timeGridPlugin;
-// window.resourceTimelinePlugin = resourceTimelinePlugin;
-// window.resourceTimeGridPlugin = resourceTimeGridPlugin;
 window.defaultCalendarOptions = {
-    // schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
-    plugins: [
-        interactionPlugin,
-        dayGridPlugin,
-        listPlugin,
-        // resourceTimelinePlugin,
-        // resourceTimeGridPlugin,
-    ],
+    plugins: [interactionPlugin, dayGridPlugin, listPlugin],
     aspectRatio: 2,
-    // initialView: "dayGridMonth",
     displayEventTime: false,
     displayEventTime: false,
     displayEventEnd: false,
@@ -91,3 +77,60 @@ window.defaultCalendarOptions = {
         list: "List View",
     },
 };
+
+/**
+ * Draggable - v1.0.0-beta.12
+ * https://github.com/Shopify/draggable
+ */
+import { Sortable, Plugins } from "@shopify/draggable";
+window.Sortable = Sortable;
+window.Plugins = Plugins;
+// window.InitSortable = () => {
+//     const containers = document.querySelectorAll(".sortable");
+
+//     if (containers.length === 0) {
+//         return false;
+//     }
+
+//     const sortable = new Sortable(containers, {
+//         draggable: ".sortable-item",
+//         mirror: {
+//             constrainDimensions: true,
+//         },
+//         plugins: [Plugins.SortAnimation],
+//         swapAnimation: {
+//             duration: 200,
+//             easingFunction: "ease-in-out",
+//         },
+//     });
+
+//     return sortable;
+// };
+
+// import { Sortable, Plugins } from "@shopify/draggable";
+
+// window.InitDraggable = () => {
+//     const containers = document.querySelectorAll(".draggable");
+
+//     if (containers.length === 0) {
+//         return false;
+//     }
+
+//     const sortable = new Sortable(containers, {
+//         draggable: ".draggable-item",
+//         mirror: {
+//             constrainDimensions: true,
+//         },
+//         plugins: [Plugins.SortAnimation],
+//         swapAnimation: {
+//             duration: 200,
+//             easingFunction: "ease-in-out",
+//         },
+//     });
+
+//     return sortable;
+// };
+
+// draggable.on("drag:start", () => console.log("drag:start"));
+// draggable.on("drag:move", () => console.log("drag:move"));
+// draggable.on("drag:stop", () => console.log("drag:stop"));

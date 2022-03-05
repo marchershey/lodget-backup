@@ -9,7 +9,7 @@
                     </div>
                 @endif
                 <div class="w-full">
-                    <input wire:model.lazy="{{ $wireId }}" wire:loading.class="opacity-20" wire:loading.attr="readonly" wire:target="{{ $wireTarget }}" type="{{ $inputType }}" name="{{ $wireId }}" id="{{ $wireId }}" class="w-full p-0 border-none focus:ring-0 placeholder-muted-lighter {{ $inputClass }}" placeholder="{{ $placeholder }}" aria-describedby="{{ $wireId }}-description" value="{{ old($wireId) }}">
+                    <input wire:model.debounce.500ms="{{ $wireId }}" wire:loading.class="opacity-20" wire:loading.attr="readonly" wire:target="{{ $wireTarget }}" type="{{ $inputType }}" name="{{ $wireId }}" id="{{ $wireId }}" class="w-full p-0 border-none focus:ring-0 placeholder-muted-lighter {{ $inputClass }}" placeholder="{{ $placeholder }}" aria-describedby="{{ $wireId }}-description" value="{{ old($wireId) }}">
                 </div>
                 @if (isset($after))
                     <div {{ $after->attributes->class(['ml-2 flex items-baseline self-center']) }}>

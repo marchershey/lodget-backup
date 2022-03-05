@@ -170,6 +170,27 @@ class CreateProperty extends Component
     {
         unset($this->stagedPhotos[$key]);
     }
+    public function reorder($ids)
+    {
+        // dd($ids);
+        // dd($this->stagedPhotos);
+
+        $order = [];
+
+        // OPTIMIZE!!!
+        foreach ($ids as $key => $id) {
+            // $this->order
+            $order[$key] = $this->stagedPhotos[$id];
+        }
+
+        $this->stagedPhotos = $order;
+
+        // dd($this->stagedPhotos);
+
+
+        # code...
+    }
+
 
 
 
@@ -223,7 +244,7 @@ class CreateProperty extends Component
 
         // Photos
         if ($this->stagedPhotos) {
-            foreach ($this->stagedPhotos as $stagedPhoto) {
+            foreach ($this->stagedPhotos as $key => $stagedPhoto) {
                 // upload photo
                 $path = $stagedPhoto->store('photos', 'public');
 
@@ -235,11 +256,12 @@ class CreateProperty extends Component
                 $photo->size = $stagedPhoto->getSize();
                 $photo->mime = $stagedPhoto->getMimeType();
                 $photo->path = $path;
+                $photo->order = $key;
                 $photo->save();
             }
         }
 
-        // redirect to new listing
+        // redirect back to properties list
         return redirect()->route('host.properties.index');
     }
 }

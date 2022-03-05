@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('size');
             $table->string('mime');
             $table->string('path');
+            $table->integer('order');
             $table->integer('property_id');
             $table->integer('user_id');
             $table->timestamps();

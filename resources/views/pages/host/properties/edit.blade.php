@@ -156,11 +156,11 @@
             <div class="col-span-2">
                 <div class="panel" wire:loading.class="opacity-50" wire:target="submit">
                     <div class="grid grid-cols-1 gap-5 xl:grid-cols-12">
-                        <x-forms.text wire:keydown.enter="addAmenity" wireTarget="addAmenity" wireId="amenity" class="xl:col-span-6" label="Add Amenities" description="Type an amenity to add, then press enter." />
+                        <x-forms.text wire:keydown.prevent.enter="addAmenity" wireTarget="addAmenity" wireId="amenity" class="xl:col-span-6" label="Add Amenities" description="Type an amenity to add, then press enter." />
                         @if (count($amenities) > 0)
                             <div class="col-span-full flex flex-wrap gap-3 leading-7">
-                                @foreach ($amenities as $key => $amenity)
-                                    <div wire:click="removeAmenity({{ $key }})" class="badge badge-gray hover:badge-red flex cursor-pointer items-center space-x-2 text-sm">
+                                @foreach ($amenities as $id => $amenity)
+                                    <div wire:click="removeAmenity({{ $id }})" class="badge badge-gray hover:badge-red flex cursor-pointer items-center space-x-2 text-sm">
                                         <span class="capitalize">{{ $amenity }}</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon h-4 w-4" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -187,7 +187,7 @@
                 </p>
             </div>
             <div class="col-span-2">
-                <div class="panel" wire:loading.class="opacity-50" wire:target="submit" x-data="{ isUploading: false, progress: 0 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
+                <div class="panel space-y-5" wire:loading.class="opacity-50" wire:target="submit" x-data="{ isUploading: false, progress: 0 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false, $dispatch('initDraggable')" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
                     <div class="flex items-center whitespace-nowrap">
                         <label x-show="!isUploading" for="file-upload">
                             <input wire:model="stagedPhotos" id="photo-upload" type="file" accept="image/png, image/jpeg" class="sr-only" multiple>
@@ -211,22 +211,47 @@
                         </div>
                     </div>
 
-                    @if ($stagedPhotos)
-                        <div class="mt-5 grid grid-cols-2 gap-5 xl:grid-cols-5">
-                            @foreach ($stagedPhotos as $key => $photo)
-                                <div class="group relative">
-                                    <div class="absolute inset-0 hidden items-center justify-center rounded-lg bg-gray-900/60 backdrop-blur-sm group-hover:flex">
-                                        <button wire:click="removeStagedPhoto({{ $key }})">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon h-12 w-12 cursor-pointer text-red-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                <path d="M4 7h16"></path>
-                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                <path d="M10 12l4 4m0 -4l-4 4"></path>
-                                            </svg>
-                                        </button>
+                    @if ($stagedPhotos || $uploadedPhotos)
+                        <div class="draggable grid grid-cols-2 -mx-2.5 my-2.5 focus-visible:outline-none sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-3">
+                            @foreach ($uploadedPhotos as $key => $photo)
+                                <div class="draggable--item relative bg-white p-2.5 rounded-lg focus-visible:outline-none" data-photo-id="{{ $photo['id'] }}">
+                                    <div class="group aspect-w-10 aspect-h-7 draggable--handle block w-full overflow-hidden rounded-lg bg-gray-100">
+                                        <img src="/storage/{{ $photo['path'] }}" alt="" class="pointer-events-none object-cover group-hover:opacity-75">
                                     </div>
-                                    <div class="aspect-square rounded-lg bg-cover bg-center ring-1 ring-inset ring-gray-800/30" style="background-image: url({{ $photo->temporaryUrl() }})"></div>
+                                    <div x-data="{open:false}" class="flex items-center justify-between">
+                                        <div class="pointer-events-none mt-2 truncate font-medium">
+                                            <p class="block truncate text-sm">{{ $photo['name'] }}</p>
+                                            <p class="text-muted block text-xs">{{ number_format($photo['size'] / 1e6, 2) }}MB</p>
+                                        </div>
+                                        <div class="relative inline-block text-left">
+                                            <div x-on:click="open = !open">
+                                                <button type="button" class="text-muted flex items-center hover:text-gray-800 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                                                    <span class="sr-only">Open options</span>
+                                                    <!-- Heroicon name: solid/dots-vertical -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <circle cx="12" cy="12" r="1"></circle>
+                                                        <circle cx="12" cy="19" r="1"></circle>
+                                                        <circle cx="12" cy="5" r="1"></circle>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div x-show="open" x-cloak x-on:click="open = false" x-on:click.away="open = false" class="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                                                <div wire:click="removeStagedPhoto({{ $key }}, {{ $photo['id'] }})" class="flex cursor-pointer select-none items-center space-x-2 px-4 py-2 text-sm text-red-500">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <line x1="4" y1="7" x2="20" y2="7"></line>
+                                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                    </svg>
+                                                    <span>Delete</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -259,10 +284,43 @@
             </div>
         </div>
 
-        <div class="flex justify-end" x-data="{ready: @entangle('ready')}">
+        <div class="flex justify-end xl:justify-between" x-data="{ready: @entangle('ready')}">
+            <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-red-link' : 'button-gray-link'" class="button">Delete Property</button>
             <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-blue' : 'button-gray'" class="button">Update Property</button>
-            <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-red-link' : 'button-gray'" class="button">Delete Property</button>
         </div>
     </div>
 
 </div>
+
+@push('scripts')
+    <script>
+        function initDraggable() {
+            const draggable = new Sortable(document.querySelectorAll('.draggable'), {
+                draggable: '.draggable--item',
+                handle: '.draggable--handle',
+                classes: {
+                    'mirror': ['opacity-50'],
+                    'draggable:over': ['opacity-0'],
+                    'source:original': ['hidden'],
+                },
+                mirror: {
+                    constrainDimensions: true,
+                },
+                plugins: [Plugins.SortAnimation],
+                swapAnimation: {
+                    duration: 200,
+                    easingFunction: "ease-in-out",
+                },
+            });
+            draggable.on("drag:stopped", (event) => {
+                @this.reorder(
+                    Array.from(document.querySelectorAll('.draggable--item')).map(el => el.dataset.photoId)
+                )
+            });
+        }
+
+        window.addEventListener("initDraggable", (event) => {
+            initDraggable();
+        });
+    </script>
+@endpush

@@ -64,8 +64,8 @@ class EditProperty extends Component
         'fees.*.name' => 'required_unless:fees,null|max:250',
         'fees.*.amount' => 'required_unless:fees,null|max:250',
         'fees.*.type' => 'required_unless:fees,null|max:250',
-        'amenities' => "",
-        'stagedPhotos' => 'required',
+        'amenities' => '',
+        'stagedPhotos' => '',
         'stagedPhotos.*' => 'image|max:5120',
         'calendar_color' => 'required|size:7',
     ];
@@ -99,35 +99,42 @@ class EditProperty extends Component
     public function load()
     {
         if ($property = Property::find($this->property_id)) {
-            $this->name = "Ohana Burnside";
-            $this->address_street = "123 address ave";
-            $this->address_city = "lexington";
-            $this->address_state = "KY";
-            $this->address_zip = "10001";
-            $this->listing_headline = "a beautiful place to stay";
-            $this->listing_description = "What a wonderful place to stay - What a wonderful place to stay - What a wonderful place to stay - What a wonderful place to stay";
-            $this->guest_count = 8;
-            $this->bedroom_count = 4;
-            $this->bed_count = 8;
-            $this->bathroom_count = 2.5;
-            $this->rate = 379.04;
-            $this->tax_rate = 7;
 
+            // load property data
+            $this->name = $property->name;
+            $this->address_street = $property->address_street;
+            $this->address_city = $property->address_city;
+            $this->address_state = $property->address_state;
+            $this->address_zip = $property->address_zip;
+            $this->listing_headline = $property->listing_headline;
+            $this->listing_description = $property->listing_description;
+            $this->guest_count = $property->guest_count;
+            $this->bedroom_count = $property->bedroom_count;
+            $this->bed_count = $property->bed_count;
+            $this->bathroom_count = $property->bathroom_count;
+            $this->rate = $property->rate;
+            $this->tax_rate = $property->tax_rate;
+            $this->calendar_color = $property->calendar_color;
+
+            // load fees
             if ($fees = $property->fees()->get(['name', 'amount', 'type'])->toArray()) {
                 $this->fees = $fees;
             }
 
-            if ($amenities = $property->amenities()->get('text')->toArray()) {
+            // load amenities
+            if ($amenities = $property->amenities()->get(['id', 'text'])->toArray()) {
                 foreach ($amenities as $amenity) {
-                    $this->amenities[] = $amenity;
+                    $this->amenities[$amenity['id']] = $amenity['text'];
                 }
-                // dd($amenities);
-                // dd(array_values($amenities));
-                // $this->amenities = array_values($amenities);
             }
 
-            $this->calendar_color = "#ff6700";
+            // load photos
+            if ($photos = $property->photos()->get(['id', 'name', 'size', 'path'])->toArray()) {
+                $this->uploadedPhotos = $photos;
+            }
         }
+
+        $this->dispatchBrowserEvent('initDraggable');
     }
 
     /**
@@ -163,9 +170,11 @@ class EditProperty extends Component
             }
         }
     }
-    public function removeAmenity($key)
+    public function removeAmenity($id)
     {
-        unset($this->amenities[$key]);
+        unset($this->amenities[$id]);
+        $amenity = Amenity::find($id);
+        $amenity->delete();
     }
 
     /**
@@ -175,6 +184,22 @@ class EditProperty extends Component
     {
         unset($this->stagedPhotos[$key]);
     }
+    public function removeUploadedPhoto($key, $id)
+    {
+        unset($this->uploadedPhotos[$key]);
+        $photo = Photo::find($id);
+        $photo->delete();
+    }
+    public function reorder($ids)
+    {
+        foreach ($ids as $key => $id) {
+            $photo = Photo::find($id);
+            $photo->order = $key;
+            $photo->save();
+            $this->uploadedPhotos = Property::find($this->property_id)->photos()->get(['id', 'name', 'size', 'path'])->toArray();
+        }
+        # code...
+    }
 
 
 
@@ -182,12 +207,11 @@ class EditProperty extends Component
 
     public function submit()
     {
+        // Validate
         $this->validate();
 
-        dd($this->stagedPhotos);
-
-        // Property
-        $property = new Property();
+        // Property Data
+        $property = Property::find($this->property_id);
         $property->name = $this->name;
         $property->address_street = $this->address_street;
         $property->address_city = $this->address_city;
@@ -233,6 +257,7 @@ class EditProperty extends Component
             }
         }
 
-        // redirect to new listing
+        // redirect back to properties list
+        return redirect()->route('host.properties.index');
     }
 }

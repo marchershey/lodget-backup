@@ -1,16 +1,16 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
+const defaultTheme = require("tailwindcss/defaultTheme");
+const colors = require("tailwindcss/colors");
 
 module.exports = {
     content: [
         "./resources/**/*.blade.php",
-        './vendor/usernotnull/tall-toasts/config/**/*.php',
-        './vendor/usernotnull/tall-toasts/resources/views/**/*.blade.php',
+        "./vendor/usernotnull/tall-toasts/config/**/*.php",
+        "./vendor/usernotnull/tall-toasts/resources/views/**/*.blade.php",
     ],
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+                sans: ["Inter var", ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 primary: {
@@ -41,15 +41,13 @@ module.exports = {
             // }
         },
         variants: {
-            backgroundColor: ['children-disabled'],
+            backgroundColor: ["children-disabled"],
         },
     },
 
     plugins: [
-        require('@tailwindcss/forms'),
-
-        // require('@tailwindcss/aspect-ratio'),
+        require("@tailwindcss/forms"),
+        require("@tailwindcss/aspect-ratio"),
         // require('@tailwindcss/line-clamp'),
     ],
-
-}
+};
