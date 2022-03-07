@@ -3,13 +3,30 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect('https://www.facebook.com/OHANA-Burnside-1416857558456870/', 302);
+
+// Route::get('/', function () {
+//     return redirect('https://www.facebook.com/OHANA-Burnside-1416857558456870/', 302);
+// });
+
+/* Auth */
+
+Route::get('/login', \App\Http\Controllers\Auth\Login::class)->name('login');
+Route::get('/signup', \App\Http\Controllers\Auth\Register::class)->name('register');
+
+
+/* Frontend */
+Route::name('frontend.')->prefix('/')->group(function () {
+    Route::get('/', \App\Http\Controllers\Frontend\LandingPage::class)->name('landing');
 });
 
 
-/////////////////////////
+/* Reservations */
+Route::name('reservation.')->prefix('reserve')->middleware('auth')->group(function () {
+    Route::get('/{id}', \App\Http\Controllers\Reservation\ReservationPage::class);
+});
 
+
+/* Host */
 Route::name('host.')->prefix('host')->group(function () {
     Route::view('/', 'pages.host.dashboard')->name('dashboard');
 
@@ -25,10 +42,19 @@ Route::name('host.')->prefix('host')->group(function () {
 
 /////////////////////////
 
-Route::name('guests.')->prefix('/guests')->group(function () {
-    Route::get('/', function () {
-        return "Test";
-    });
+Route::get('/test', function () {
+
+    // return auth()->user()->updateDefaultPaymentMethodFromStripe();
+    $dd = auth()->user()->charge(500, auth()->user()->stripe_pm, [
+        'off_session' => true,
+        'confirm' => true,
+    ]);
+    dd($dd);
+});
+
+Route::get('/logout', function () {
+    auth()->logout();
+    return redirect()->route('login');
 });
 
 Route::get('/clear', function () {
@@ -38,5 +64,4 @@ Route::get('/clear', function () {
     Artisan::call('event:clear');
     Artisan::call('route:clear');
     cache()->flush();
-
 });

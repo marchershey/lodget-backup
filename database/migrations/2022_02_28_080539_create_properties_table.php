@@ -22,10 +22,10 @@ return new class extends Migration
             $table->string('address_zip');
             $table->string('listing_headline');
             $table->text('listing_description');
-            $table->string('guest_count');
-            $table->string('bedroom_count');
-            $table->string('bed_count');
-            $table->string('bathroom_count');
+            $table->integer('guest_count');
+            $table->integer('bedroom_count');
+            $table->integer('bed_count');
+            $table->decimal('bathroom_count', 4, 1);
             $table->string('rate');
             $table->string('tax_rate');
             $table->string('calendar_color');

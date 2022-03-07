@@ -211,8 +211,23 @@
                         </div>
                     </div>
 
-                    @if ($stagedPhotos || $uploadedPhotos)
-                        <div class="draggable grid grid-cols-2 -mx-2.5 my-2.5 focus-visible:outline-none sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-3">
+                    @if ($stagedPhotos)
+                        <div class="space-y-5 rounded-lg bg-gray-100 p-5">
+                            <div class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-4">
+                                @foreach ($stagedPhotos as $key => $photo)
+                                    <div wire:click="removeStagedPhoto({{ $key }})" class="group aspect-w-10 aspect-h-7 draggable--handle block w-full cursor-pointer overflow-hidden rounded-lg bg-gray-100">
+                                        <img src="{{ $photo->temporaryUrl() }}" alt="" class="pointer-events-none object-cover group-hover:opacity-75">
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="text-muted text-xs">
+                                <strong>Note:</strong> Click/Tap a photo to delete it. Also, you need to save these photos before you can reorder them.
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($uploadedPhotos)
+                        <div class="draggable -mx-2.5 my-2.5 focus-visible:outline-none grid-smaller">
                             @foreach ($uploadedPhotos as $key => $photo)
                                 <div class="draggable--item relative bg-white p-2.5 rounded-lg focus-visible:outline-none" data-photo-id="{{ $photo['id'] }}">
                                     <div class="group aspect-w-10 aspect-h-7 draggable--handle block w-full overflow-hidden rounded-lg bg-gray-100">
@@ -225,20 +240,22 @@
                                         </div>
                                         <div class="relative inline-block text-left">
                                             <div x-on:click="open = !open">
-                                                <button type="button" class="text-muted flex items-center hover:text-gray-800 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                                                <button type="button" class="text-muted flex items-center hover:text-red-500 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
                                                     <span class="sr-only">Open options</span>
                                                     <!-- Heroicon name: solid/dots-vertical -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <circle cx="12" cy="12" r="1"></circle>
-                                                        <circle cx="12" cy="19" r="1"></circle>
-                                                        <circle cx="12" cy="5" r="1"></circle>
+                                                        <line x1="4" y1="7" x2="20" y2="7"></line>
+                                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
                                                     </svg>
                                                 </button>
                                             </div>
                                             <div x-show="open" x-cloak x-on:click="open = false" x-on:click.away="open = false" class="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                                                <div wire:click="removeStagedPhoto({{ $key }}, {{ $photo['id'] }})" class="flex cursor-pointer select-none items-center space-x-2 px-4 py-2 text-sm text-red-500">
+                                                <div wire:click="removeUploadedPhoto({{ $key }}, {{ $photo['id'] }})" class="flex cursor-pointer select-none items-center space-x-2 px-4 py-2 text-sm text-red-500">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <line x1="4" y1="7" x2="20" y2="7"></line>
@@ -254,6 +271,9 @@
                                     </div>
                                 </div>
                             @endforeach
+                        </div>
+                        <div class="text-muted text-xs">
+                            <strong>Note:</strong> To reorder the photos, simply drag the photo to a new position.
                         </div>
                     @endif
 
@@ -313,7 +333,7 @@
                 },
             });
             draggable.on("drag:stopped", (event) => {
-                @this.reorder(
+                @this.reorderUploadedPhotos(
                     Array.from(document.querySelectorAll('.draggable--item')).map(el => el.dataset.photoId)
                 )
             });

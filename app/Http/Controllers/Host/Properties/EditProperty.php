@@ -108,10 +108,10 @@ class EditProperty extends Component
             $this->address_zip = $property->address_zip;
             $this->listing_headline = $property->listing_headline;
             $this->listing_description = $property->listing_description;
-            $this->guest_count = $property->guest_count;
-            $this->bedroom_count = $property->bedroom_count;
-            $this->bed_count = $property->bed_count;
-            $this->bathroom_count = $property->bathroom_count;
+            $this->guest_count = (int) $property->guest_count;
+            $this->bedroom_count = (int) $property->bedroom_count;
+            $this->bed_count = (int) $property->bed_count;
+            $this->bathroom_count = (float) $property->bathroom_count;
             $this->rate = $property->rate;
             $this->tax_rate = $property->tax_rate;
             $this->calendar_color = $property->calendar_color;
@@ -190,7 +190,7 @@ class EditProperty extends Component
         $photo = Photo::find($id);
         $photo->delete();
     }
-    public function reorder($ids)
+    public function reorderUploadedPhotos($ids)
     {
         foreach ($ids as $key => $id) {
             $photo = Photo::find($id);
@@ -241,7 +241,11 @@ class EditProperty extends Component
 
         // Photos
         if ($this->stagedPhotos) {
+            $lastOrder = Photo::where('property_id', $this->property_id)->get('order')->last()->order;
             foreach ($this->stagedPhotos as $stagedPhoto) {
+                // increase last order
+                $lastOrder++;
+
                 // upload photo
                 $path = $stagedPhoto->store('photos', 'public');
 
@@ -253,6 +257,7 @@ class EditProperty extends Component
                 $photo->size = $stagedPhoto->getSize();
                 $photo->mime = $stagedPhoto->getMimeType();
                 $photo->path = $path;
+                $photo->order = $lastOrder;
                 $photo->save();
             }
         }

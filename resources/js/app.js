@@ -14,6 +14,21 @@ Alpine.start();
  */
 // Cleave - https://github.com/nosir/cleave.js
 import Cleave from "cleave.js";
+import CleaveUSPhone from "cleave.js/dist/addons/cleave-phone.us";
+function formatPhone(element) {
+    new Cleave(element, {
+        phone: true,
+        delimiter: "",
+        phoneRegionCode: "US",
+    });
+}
+function formatDate(element) {
+    new Cleave(element, {
+        date: true,
+        delimiter: "/",
+        datePattern: ["m", "d", "Y"],
+    });
+}
 function formatZipCode(element) {
     new Cleave(element, {
         numericOnly: true,
@@ -31,6 +46,12 @@ function formatMoney(element) {
         rawValueTrimPrefix: true,
     });
 }
+document.querySelectorAll(".phone").forEach((element) => {
+    formatPhone(element);
+});
+document.querySelectorAll(".date").forEach((element) => {
+    formatDate(element);
+});
 document.querySelectorAll(".money").forEach((element) => {
     formatMoney(element);
 });
@@ -38,6 +59,12 @@ document.querySelectorAll(".zip-code").forEach((element) => {
     formatZipCode(element);
 });
 window.addEventListener("maskAllElements", (event) => {
+    document.querySelectorAll(".phone").forEach((element) => {
+        formatPhone(element);
+    });
+    document.querySelectorAll(".date").forEach((element) => {
+        formatDate(element);
+    });
     document.querySelectorAll(".money").forEach((element) => {
         formatMoney(element);
     });
@@ -85,52 +112,3 @@ window.defaultCalendarOptions = {
 import { Sortable, Plugins } from "@shopify/draggable";
 window.Sortable = Sortable;
 window.Plugins = Plugins;
-// window.InitSortable = () => {
-//     const containers = document.querySelectorAll(".sortable");
-
-//     if (containers.length === 0) {
-//         return false;
-//     }
-
-//     const sortable = new Sortable(containers, {
-//         draggable: ".sortable-item",
-//         mirror: {
-//             constrainDimensions: true,
-//         },
-//         plugins: [Plugins.SortAnimation],
-//         swapAnimation: {
-//             duration: 200,
-//             easingFunction: "ease-in-out",
-//         },
-//     });
-
-//     return sortable;
-// };
-
-// import { Sortable, Plugins } from "@shopify/draggable";
-
-// window.InitDraggable = () => {
-//     const containers = document.querySelectorAll(".draggable");
-
-//     if (containers.length === 0) {
-//         return false;
-//     }
-
-//     const sortable = new Sortable(containers, {
-//         draggable: ".draggable-item",
-//         mirror: {
-//             constrainDimensions: true,
-//         },
-//         plugins: [Plugins.SortAnimation],
-//         swapAnimation: {
-//             duration: 200,
-//             easingFunction: "ease-in-out",
-//         },
-//     });
-
-//     return sortable;
-// };
-
-// draggable.on("drag:start", () => console.log("drag:start"));
-// draggable.on("drag:move", () => console.log("drag:move"));
-// draggable.on("drag:stop", () => console.log("drag:stop"));

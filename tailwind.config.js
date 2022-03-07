@@ -23,6 +23,7 @@ module.exports = {
                     lighter: colors.gray[300],
                 },
                 dark: colors.gray[800],
+                light: colors.white,
                 // gray: colors.gray,
                 // primary: {
                 //     DEFAULT: colors.blue[600],

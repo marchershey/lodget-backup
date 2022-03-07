@@ -83,7 +83,7 @@ class CreateProperty extends Component
         $this->address_zip = "10001";
         $this->listing_headline = "a beautiful place to stay";
         $this->listing_description = "What a wonderful place to stay - What a wonderful place to stay - What a wonderful place to stay - What a wonderful place to stay";
-        $this->guest_count = 0;
+        $this->guest_count = 8;
         $this->bedroom_count = 4;
         $this->bed_count = 8;
         $this->bathroom_count = 2.5;
@@ -170,25 +170,13 @@ class CreateProperty extends Component
     {
         unset($this->stagedPhotos[$key]);
     }
-    public function reorder($ids)
+    public function reorderUploadedPhotos($ids)
     {
-        // dd($ids);
-        // dd($this->stagedPhotos);
-
         $order = [];
-
-        // OPTIMIZE!!!
         foreach ($ids as $key => $id) {
-            // $this->order
             $order[$key] = $this->stagedPhotos[$id];
         }
-
         $this->stagedPhotos = $order;
-
-        // dd($this->stagedPhotos);
-
-
-        # code...
     }
 
 

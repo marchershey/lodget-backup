@@ -187,7 +187,7 @@
                 </p>
             </div>
             <div class="col-span-2">
-                <div class="panel" wire:loading.class="opacity-50" wire:target="submit" x-data="{ isUploading: false, progress: 0 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false, $dispatch('initDraggable')" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
+                <div class="panel space-y-5" wire:loading.class="opacity-50" wire:target="submit" x-data="{ isUploading: false, progress: 0 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false, $dispatch('initDraggable')" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
                     <div class="flex items-center whitespace-nowrap">
                         <label x-show="!isUploading" for="file-upload">
                             <input wire:model="stagedPhotos" id="photo-upload" type="file" accept="image/png, image/jpeg" class="sr-only" multiple>
@@ -212,46 +212,13 @@
                     </div>
 
                     @if ($stagedPhotos)
-                        <div class="draggable grid grid-cols-2 -mx-2.5 my-2.5 focus-visible:outline-none sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-3 bg-gray-100 p-5">
+                        <div class="text-muted text-xs">
+                            <strong>Note:</strong> Click/Tap a photo to remove it
+                        </div>
+                        <div class="grid-default">
                             @foreach ($stagedPhotos as $key => $photo)
-                                <div class="draggable--item relative bg-white p-2.5 rounded-lg focus-visible:outline-none" data-photo-id="{{ $key }}">
-                                    <div class="group aspect-w-10 aspect-h-7 draggable--handle block w-full overflow-hidden rounded-lg bg-gray-100">
-                                        <img src="{{ $photo->temporaryUrl() }}" alt="" class="pointer-events-none object-cover group-hover:opacity-75">
-                                    </div>
-                                    <div x-data="{open:false}" class="flex items-center justify-between">
-                                        <div class="pointer-events-none mt-2 truncate font-medium">
-                                            <p class="block truncate text-sm">{{ $photo->getClientOriginalName() }}</p>
-                                            <p class="text-muted block text-xs">{{ $photo->getSize() }}MB</p>
-                                        </div>
-                                        <div class="relative inline-block text-left">
-                                            <div x-on:click="open = !open">
-                                                <button type="button" class="text-muted flex items-center hover:text-gray-800 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
-                                                    <span class="sr-only">Open options</span>
-                                                    <!-- Heroicon name: solid/dots-vertical -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <circle cx="12" cy="12" r="1"></circle>
-                                                        <circle cx="12" cy="19" r="1"></circle>
-                                                        <circle cx="12" cy="5" r="1"></circle>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            <div x-show="open" x-cloak x-on:click="open = false" x-on:click.away="open = false" class="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                                                <div wire:click="removeUploadedPhoto({{ $key }})" class="flex cursor-pointer select-none items-center space-x-2 px-4 py-2 text-sm text-red-500">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <line x1="4" y1="7" x2="20" y2="7"></line>
-                                                        <line x1="10" y1="11" x2="10" y2="17"></line>
-                                                        <line x1="14" y1="11" x2="14" y2="17"></line>
-                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                    </svg>
-                                                    <span>Delete</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div wire:click="removeStagedPhoto({{ $key }})" class="group aspect-w-10 aspect-h-7 draggable--handle block w-full cursor-pointer overflow-hidden rounded-lg bg-gray-100">
+                                    <img src="{{ $photo->temporaryUrl() }}" alt="" class="pointer-events-none object-cover group-hover:opacity-75">
                                 </div>
                             @endforeach
                         </div>
@@ -290,37 +257,3 @@
     </div>
 
 </div>
-
-@push('scripts')
-    <script>
-        function initDraggable() {
-            const draggable = new Sortable(document.querySelectorAll('.draggable'), {
-                draggable: '.draggable--item',
-                handle: '.draggable--handle',
-                classes: {
-                    'mirror': ['opacity-50'],
-                    'draggable:over': ['opacity-0'],
-                    'source:original': ['hidden'],
-                },
-                mirror: {
-                    constrainDimensions: true,
-                },
-                plugins: [Plugins.SortAnimation],
-                swapAnimation: {
-                    duration: 200,
-                    easingFunction: "ease-in-out",
-                },
-            });
-            draggable.on("drag:stopped", (event) => {
-                @this.reorder(
-                    Array.from(document.querySelectorAll('.draggable--item')).map(el => el.dataset.photoId)
-                )
-            });
-        }
-
-        window.addEventListener("initDraggable", (event) => {
-            console.log('yup');
-            initDraggable();
-        });
-    </script>
-@endpush

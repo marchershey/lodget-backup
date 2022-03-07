@@ -29,10 +29,10 @@
                 min: {{ $min }},
                 max: {{ $max }},
                 add() {
-                    this.value = (this.addDisabled) ? this.value + this.step : this.value
+                    this.value = (this.addDisabled) ? (this.value + this.step) : this.value
                 },
                 subtract() {
-                    this.value = (this.subtractDisabled) ? this.value - this.step : this.value
+                    this.value = (this.subtractDisabled) ? (this.value - this.step) : this.value
                 },
                 addDisabled() {
                     return this.value >= this.max

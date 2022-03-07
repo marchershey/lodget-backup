@@ -17,8 +17,17 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->date('birthdate');
+            $table->string('phone');
+            $table->string('address')->nullable();
+            $table->string('unit')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
+            $table->string('stripe_id')->nullable()->index();
+            $table->string('stripe_pm')->nullable();
+            $table->boolean('is_host')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

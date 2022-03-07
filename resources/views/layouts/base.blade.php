@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full bg-gray-200 dark:bg-zinc-900">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @hasSection('browserTitle')
         <title>{{ $title }} - {{ config('app.name') }}</title>
@@ -13,9 +13,27 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?{{ rand() }}">
     @livewireStyles
     <script src="{{ asset('js/app.js') }}?{{ rand() }}" defer></script>
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+
+        // Whenever the user explicitly chooses light mode
+        localStorage.theme = 'light'
+
+        // Whenever the user explicitly chooses dark mode
+        localStorage.theme = 'dark'
+
+        // Whenever the user explicitly chooses to respect the OS preference
+        localStorage.removeItem('theme')
+    </script>
 </head>
 
-<body class="h-full">
+<body class="h-full text-gray-800">
+    <livewire:toasts />
     <div class="fixed bottom-0 right-0 z-50 bg-red-500 px-1 text-xs text-white">
         <div class="sm:hidden">xs</div>
         <div class="hidden sm:block md:hidden">sm</div>
@@ -28,6 +46,7 @@
     {{ $slot }}
 
     @livewireScripts
+    @toastScripts
     @stack('scripts')
 
     @if (app()->isLocal())

@@ -8,6 +8,9 @@
     }
 
     /* Typography */
+    .label {
+        @apply text-sm font-medium text-gray-700 block mb-1;
+    }
     .text-link {
         @apply font-medium cursor-pointer text-primary hover:text-primary-darker group-hover:text-primary-darker;
     }
@@ -16,6 +19,9 @@
     }
     .text-heading {
         @apply text-lg font-medium;
+    }
+    .section-heading {
+        @apply text-2xl font-medium;
     }
 
     /* Navigation */
@@ -29,14 +35,37 @@
 
 @layer components {
     /* Elements */
-    .section {
-        @apply flex flex-col space-y-3;
+    .frontend-container {
+        @apply max-w-screen-xl h-full mx-auto p-5;
     }
+
+    .minimal-container {
+        @apply mx-auto h-auto w-full sm:max-w-md py-10 pt-0 sm:pt-10;
+    }
+    .minimal-center-container {
+        @apply flex min-w-full items-start;
+    }
+    .minimal-section-spacing {
+        @apply flex flex-col space-y-5 w-full;
+    }
+    .minimal-section {
+        @apply bg-white p-5 space-y-5 sm:rounded-lg border border-gray-300;
+    }
+
     .section-spacing {
         @apply flex flex-col space-y-10;
     }
+    .section {
+        @apply flex flex-col space-y-3;
+    }
     .panel {
         @apply p-5 bg-white border border-gray-300 rounded-lg shadow-lg;
+    }
+    .grid-default {
+        @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+    }
+    .grid-smaller {
+        @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3;
     }
 
     /* Tables */
@@ -77,6 +106,12 @@
     .button {
         @apply inline-block px-3 py-3 md:py-1.5 text-sm md:text-base font-medium rounded cursor-pointer w-full md:w-auto;
     }
+    .button-primary {
+        @apply bg-primary text-white hover:bg-primary-darker;
+    }
+    .button-link {
+        @apply text-primary;
+    }
     .button-red {
         @apply text-white bg-red-600 hover:bg-red-700;
     }
@@ -94,12 +129,23 @@
     }
 
     /* Images */
-    /* .image {
+    /* .image-container {
         @apply 
     } */
+    .image {
+        @apply h-full w-full bg-cover bg-center rounded-lg ring-1 ring-inset ring-black/10 bg-gray-100;
+    }
 }
 
 @layer utilities {
+    .fix-image-blur {
+        @apply isolate;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    .no-label {
+        @apply mt-6;
+    }
     .icon {
         @apply flex-shrink-0;
     }

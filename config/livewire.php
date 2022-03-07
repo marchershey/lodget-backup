@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'layout' => 'components.layouts.base',
+    'layout' => 'layouts.base',
 
     /*
     |--------------------------------------------------------------------------

@@ -2,7 +2,7 @@
     <label for="{{ $wireId }}" class="block">
         <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
         <div class="mt-1">
-            <div class="flex items-baseline w-full border border-gray-300 px-3 py-1.5 rounded-md focus-within:ring-1 focus-within:ring-primary focus-within:border-primary sm:text-sm @error($wireId) border-red-500 @enderror">
+            <div class="flex items-baseline w-full border border-gray-300 px-3 py-1.5 rounded focus-within:ring-1 focus-within:ring-primary focus-within:border-primary sm:text-sm @error($wireId) border-red-500 @enderror">
                 @if (isset($before))
                     <div {{ $before->attributes->class(['mr-2 flex items-baseline self-center']) }}>
                         {{ $before ?? null }}
