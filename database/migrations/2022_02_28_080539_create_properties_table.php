@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('tax_rate');
             $table->string('calendar_color');
             $table->integer('user_id');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

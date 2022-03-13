@@ -32,8 +32,8 @@
                     <div class="flex h-4 items-center">
                         <input required checked wire:model="terms" id="terms" aria-describedby="terms-description" name="terms" type="checkbox" class="text-primary h-4 w-4 rounded border-gray-300">
                     </div>
-                    <div class="ml-3 text-xs font-medium @error('terms') text-red-500 @else text-gray-700 @enderror">
-                        <div id="terms-description">I have read and agree to the <span class="text-link">Terms of Service</span> and <span class="text-link">Privacy Policy</span></div>
+                    <div class="ml-3">
+                        <div id="terms-description" class="text-sm font-medium @error('terms') text-red-500 @else text-gray-700 @enderror">I have read and agree to the <span class="text-link">Terms</span> and <span class="text-link">Privacy Policy</span></div>
                     </div>
                 </label>
             </div>
@@ -41,7 +41,7 @@
 
         {{-- Disclaimer --}}
         <div>
-            <p class="text-muted mt-2 text-xs italic"><strong>We get it, your privacy is very important to you.</strong> That's why we will never share your personal information with any third parties, <strong>whatsoever</strong>.</p>
+            <p class="text-muted mt-2 text-xs">We get it, your privacy is very important to you, that's why we will never share your personal information with any third parties, <strong>whatsoever</strong>.</p>
         </div>
 
         {{-- Buttons --}}

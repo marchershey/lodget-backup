@@ -40,7 +40,7 @@
     }
 
     .minimal-container {
-        @apply mx-auto h-auto w-full sm:max-w-md py-10 pt-0 sm:pt-10;
+        @apply mx-auto h-auto w-full sm:max-w-md py-10;
     }
     .minimal-center-container {
         @apply flex min-w-full items-start;
@@ -143,21 +143,35 @@
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
     }
+
     .no-label {
         @apply mt-6;
     }
+
     .icon {
         @apply flex-shrink-0;
     }
+
     .full-screen {
         height: 100vh;
         /* Fallback for browsers that do not support Custom Properties */
         height: calc(var(--vh, 1vh) * 100);
     }
+
     .show-mobile {
         @apply block lg:hidden;
     }
     .hide-mobile {
         @apply hidden lg:block;
+    }
+
+    @keyframes cursor-blink {
+        0% {
+            opacity: 0;
+        }
+    }
+    .cursor-blink {
+        @apply block ml-2 h-6 w-[2px] bg-black;
+        animation: cursor-blink 1.5s steps(2) infinite;
     }
 }
