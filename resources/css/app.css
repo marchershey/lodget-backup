@@ -2,6 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
+.splide__slide img {
+    opacity: 0.5;
+}
+
+.splide__slide.is-active img {
+    opacity: 1;
+}
+
+.splide__slide.is-active {
+    border: 0 !important;
+}
+
+/* Calendar */
+#calendar .litepicker,
+#calendar .container__main,
+#calendar .container__months,
+#calendar .month-item {
+    @apply w-full text-base text-center shadow-none rounded-md p-0 !important;
+}
+
+/* WEEK CONTAINER */
+#calendar .month-item-weekdays-row {
+    @apply grid grid-cols-7 w-full !important;
+}
+
+/* WEEK ITEM */
+#calendar .month-item-weekdays-row div {
+    @apply w-auto !important;
+}
+
+/* DAYS CONTAINER */
+#calendar .container__days {
+    @apply grid grid-cols-7 !important;
+}
+
+/* DAY ITEM */
+#calendar .container__days div {
+    @apply w-auto p-0 py-2 outline-none border-transparent border !important;
+}
+/* DAY ITEM DEFAULT HOVER */
+#calendar
+    .container__days
+    .day-item:hover:not(.is-start-date):not(.is-end-date):not(.is-locked) {
+    @apply shadow-none text-primary outline-none border-primary !important;
+}
+#calendar .container__days .day-item:hover.is-start-date:hover,
+#calendar .container__days .day-item.is-end-date:hover {
+    @apply shadow-none outline-none border-transparent !important;
+}
+/* RANGE START */
+#calendar .container__days .day-item.is-start-date {
+    @apply bg-primary text-white !important;
+}
+/* RANGE MIDDLE */
+#calendar .container__days .day-item.is-in-range {
+    @apply bg-primary-lightest !important;
+}
+/* RANGE END */
+#calendar .container__days .day-item.is-end-date {
+    @apply bg-primary text-white !important;
+}
+
+/* DAY ITEM LOCKED */
+#calendar
+    .container__days
+    .day-item.is-locked:not(.is-start-date):not(.is-end-date):not(.is-in-range) {
+    @apply text-muted-lighter !important;
+}
+/* DAY ITEM IN RANGE DISABLED */
+#calendar .container__days .day-item.is-in-range.is-locked {
+    @apply !important;
+}
+
 @layer base {
     [x-cloak] {
         display: none !important;

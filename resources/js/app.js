@@ -11,14 +11,14 @@ Alpine.start();
 
 /**
  * Formatters / Masks
+ * Cleave - https://github.com/nosir/cleave.js
  */
-// Cleave - https://github.com/nosir/cleave.js
 import Cleave from "cleave.js";
 import CleaveUSPhone from "cleave.js/dist/addons/cleave-phone.us";
 function formatPhone(element) {
     new Cleave(element, {
         phone: true,
-        delimiter: "",
+        delimiter: " ",
         phoneRegionCode: "US",
     });
 }
@@ -112,3 +112,20 @@ window.defaultCalendarOptions = {
 import { Sortable, Plugins } from "@shopify/draggable";
 window.Sortable = Sortable;
 window.Plugins = Plugins;
+
+/**
+ * Swiper JS - 8.0.7
+ * https://swiperjs.com/get-started
+ */
+import Swiper from "swiper/bundle";
+import "swiper/css/bundle";
+window.Swiper = Swiper;
+
+// photo slider - splidejs
+import Splide from "@splidejs/splide";
+import splideCss from "@splidejs/splide/dist/css/themes/splide-default.min.css";
+window.Splide = Splide;
+
+// calendar - lightpicker
+import Litepicker from "litepicker";
+import "litepicker/dist/plugins/mobilefriendly";

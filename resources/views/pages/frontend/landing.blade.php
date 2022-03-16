@@ -80,17 +80,19 @@
         <div class="grid grid-cols-1 gap-10 md:grid-cols-3">
             @if ($properties)
                 @foreach ($properties as $property)
-                    <div class="flex flex-col space-y-3">
-                        <div class="aspect-w-10 aspect-h-7 overflow-hidden rounded-3xl">
-                            <img class="bg-cover bg-center" src="/storage/{{ $property->photos()->first()->path }}" alt="">
+                    <a href="/property/{{ $property->id }}">
+                        <div class="flex flex-col space-y-3">
+                            <div class="aspect-w-10 aspect-h-7 overflow-hidden rounded-3xl">
+                                <img class="bg-cover bg-center" src="/storage/{{ $property->photos()->first()->path }}" alt="">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <h1 class="text-2xl font-medium capitalize">{{ $property->name }}</h1>
+                                <h3 class="text-lg">
+                                    ${{ number_format($property->rate, 2) }} <span class="text-muted">/ night</span>
+                                </h3>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <h1 class="text-2xl font-medium">{{ $property->name }}</h1>
-                            <h3 class="text-lg">
-                                ${{ number_format($property->rate, 2) }} <span class="text-muted">/ night</span>
-                            </h3>
-                        </div>
-                    </div>
+                    </a>
                 @endforeach
             @else
                 <div class="flex animate-pulse flex-col space-y-3">
@@ -153,7 +155,7 @@
                 <h1 class="text-center text-5xl font-extrabold leading-tight tracking-wide text-white md:text-6xl md:font-bold">
                     Let us host your <span class="text-primary-lighter">next vacation</span>
                 </h1>
-                <div class="flex items-center justify-center space-x-3 rounded-full bg-white hover:bg-primary group hover:text-white px-8 py-3 md:w-[400px] cursor-pointer shadow-2xl hover:scale-110 transition">
+                <div class="hover:bg-primary group flex cursor-pointer items-center justify-center space-x-3 rounded-full bg-white px-8 py-3 shadow-2xl transition hover:scale-110 hover:text-white md:w-[400px]">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon text-muted h-7 w-7 group-hover:text-white" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                         <circle cx="10" cy="10" r="7"></circle>

@@ -17,6 +17,7 @@ Route::get('/signup', \App\Http\Controllers\Auth\Register::class)->name('registe
 /* Frontend */
 Route::name('frontend.')->prefix('/')->group(function () {
     Route::get('/', \App\Http\Controllers\Frontend\LandingPage::class)->name('landing');
+    Route::get('/property/{property_id}', App\Http\Controllers\Frontend\PropertyPage::class)->name('property');
 });
 
 
@@ -64,4 +65,5 @@ Route::get('/clear', function () {
     Artisan::call('event:clear');
     Artisan::call('route:clear');
     cache()->flush();
+    return redirect()->back();
 });

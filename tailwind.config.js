@@ -16,6 +16,7 @@ module.exports = {
                 primary: {
                     DEFAULT: colors.blue[600],
                     lighter: colors.blue[500],
+                    lightest: colors.blue[200],
                     darker: colors.blue[800],
                 },
                 muted: {
