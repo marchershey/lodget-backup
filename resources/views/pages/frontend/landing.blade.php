@@ -95,6 +95,21 @@
                     </a>
                 @endforeach
             @else
+                {{-- Loading placeholders --}}
+                <div class="flex animate-pulse flex-col space-y-3">
+                    <div class="h-64 w-full rounded-3xl bg-gray-200"></div>
+                    <div class="flex justify-between">
+                        <div class="h-6 basis-1/2 rounded-3xl bg-gray-200"></div>
+                        <div class="h-6 basis-1/4 rounded-3xl bg-gray-200"></div>
+                    </div>
+                </div>
+                <div class="flex animate-pulse flex-col space-y-3">
+                    <div class="h-64 w-full rounded-3xl bg-gray-200"></div>
+                    <div class="flex justify-between">
+                        <div class="h-6 basis-1/2 rounded-3xl bg-gray-200"></div>
+                        <div class="h-6 basis-1/4 rounded-3xl bg-gray-200"></div>
+                    </div>
+                </div>
                 <div class="flex animate-pulse flex-col space-y-3">
                     <div class="h-64 w-full rounded-3xl bg-gray-200"></div>
                     <div class="flex justify-between">
