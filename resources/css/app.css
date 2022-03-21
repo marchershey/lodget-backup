@@ -16,6 +16,12 @@
     }
 
     /* Typography */
+    .section-title {
+        @apply font-semibold text-3xl;
+    }
+
+    /* --------------------- */
+
     .label {
         @apply text-sm font-medium text-gray-700 block mb-1;
     }
@@ -42,6 +48,7 @@
 }
 
 @layer components {
+    /* ------------------------------- */
     /* Elements */
 
     .section-spacing {

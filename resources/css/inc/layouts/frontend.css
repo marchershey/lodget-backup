@@ -2,5 +2,13 @@
     @apply max-w-screen-xl mx-auto flex flex-col space-y-10;
 }
 .frontend-section {
-    @apply p-5 flex flex-col space-y-;
+    @apply md:p-10 flex flex-col space-y-5;
+}
+.frontend-title {
+    @apply font-semibold text-3xl;
+}
+
+/* Properties */
+.frontend-property-grid {
+    @apply grid grid-cols-1 gap-10 md:grid-cols-3;
 }

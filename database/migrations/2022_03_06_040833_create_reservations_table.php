@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->string('slug');
+            $table->integer('property_id');
+            $table->integer('user_id')->nullable();
+            $table->integer('nights');
+            $table->string('checkin_date');
+            $table->string('checkout_date');
             $table->timestamps();
         });
     }

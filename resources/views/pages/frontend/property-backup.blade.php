@@ -1,5 +1,5 @@
-<div class="frontend-container max-w-6xl">
-    <div class="grid grid-cols-1 space-y-5 lg:grid-cols-3 lg:space-y-0 lg:space-x-5" wire:init="load">
+<div class="frontend-container">
+    <div class="frontend-section grid grid-cols-1 space-y-5 lg:grid-cols-3 lg:space-y-0 lg:space-x-5" wire:init="load">
 
         @if ($property)
             <!-- Left column -->

@@ -73,8 +73,8 @@
 
         {{-- Properties list --}}
         <section class="frontend-section" wire:init="loadProperties">
-            <h1>check out some of our most popular properties...</h1>
-            <div class="grid grid-cols-1 gap-10 md:grid-cols-3">
+            <h1 class="frontend-title">Popular Properties</h1>
+            <div class="frontend-property-grid">
                 @if ($properties)
                     @foreach ($properties as $property)
                         <a href="/property/{{ $property->id }}">

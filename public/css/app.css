@@ -11,7 +11,35 @@
     margin-bottom: calc(2.5rem * var(--tw-space-y-reverse))
 }
 .frontend-section {
-    padding: 1.25rem
+    display: flex;
+    flex-direction: column
+}
+.frontend-section > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1.25rem * var(--tw-space-y-reverse))
+}
+@media (min-width: 768px) {
+    .frontend-section {
+        padding: 2.5rem
+    }
+}
+.frontend-title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 600
+}
+
+/* Properties */
+.frontend-property-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 2.5rem
+}
+@media (min-width: 768px) {
+    .frontend-property-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
 }
 
 /* Minimal Container */
@@ -700,6 +728,14 @@ select {
     }
 
     /* Typography */
+    .section-title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 600;
+}
+
+    /* --------------------- */
+
     .label {
   margin-bottom: 0.25rem;
   display: block;
@@ -838,6 +874,7 @@ select {
 .aspect-h-7 {
   --tw-aspect-h: 7;
 }
+/* ------------------------------- */
 /* Elements */
 .section-spacing {
   display: flex;
@@ -1592,6 +1629,11 @@ select {
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
 }
+.space-y-0 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0px * var(--tw-space-y-reverse));
+}
 .space-y-10 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));
@@ -1616,11 +1658,6 @@ select {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-}
-.space-y-0 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0px * var(--tw-space-y-reverse));
 }
 .self-start {
   align-self: flex-start;
@@ -1774,11 +1811,11 @@ select {
 .p-0 {
   padding: 0px;
 }
-.p-3 {
-  padding: 0.75rem;
-}
 .p-5 {
   padding: 1.25rem;
+}
+.p-3 {
+  padding: 0.75rem;
 }
 .p-2\.5 {
   padding: 0.625rem;

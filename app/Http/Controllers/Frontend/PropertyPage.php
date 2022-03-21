@@ -24,7 +24,7 @@ class PropertyPage extends Component
     // Reservation data
     public $checkin_date;
     public $checkout_date;
-    public $nights = 4;
+    public $nights;
 
     // Pricing details
     public $pricing_base;
@@ -102,11 +102,11 @@ class PropertyPage extends Component
     public function updateDates($dates)
     {
         // update and formats (YYYY-MM-DD) backend dates
-        $this->checkin = Carbon::parse($dates[0])->format('Y-m-d');
-        $this->checkout = Carbon::parse($dates[1])->format('Y-m-d');
+        $this->checkin_date = Carbon::parse($dates[0])->format('Y-m-d');
+        $this->checkout_date = Carbon::parse($dates[1])->format('Y-m-d');
 
         // sets the number of nights
-        $this->nights = Carbon::parse($this->checkin)->diffInDays(Carbon::parse($this->checkout));
+        $this->nights = Carbon::parse($this->checkin_date)->diffInDays(Carbon::parse($this->checkout_date));
 
         // calculate prices
         $this->calcPricing();
@@ -115,11 +115,11 @@ class PropertyPage extends Component
         $this->showCalendar = false;
     }
 
-    // NEEDS DOCUMENTATION
+    // NEEDS IMPLEMENTATION & DOCUMENTATION
     public function clearDates()
     {
-        $this->checkin = null;
-        $this->checkout = null;
+        $this->checkin_date = null;
+        $this->checkout_date = null;
         $this->nights = null;
         $this->showCalendar = true;
     }
@@ -173,48 +173,48 @@ class PropertyPage extends Component
         }
     }
 
-    public function auth()
-    {
-        $this->user = User::where('email', $this->email)->first();
+    // public function auth()
+    // {
+    //     $this->user = User::where('email', $this->email)->first();
 
-        if ($this->user) {
-            $this->showLoginForm = true;
-            $this->showSignupForm = false;
-            $this->authType = "login";
-        } else {
-            $this->showSignupForm = true;
-            $this->showLoginForm = false;
-            $this->authType = "signup";
-        }
-    }
+    //     if ($this->user) {
+    //         $this->showLoginForm = true;
+    //         $this->showSignupForm = false;
+    //         $this->authType = "login";
+    //     } else {
+    //         $this->showSignupForm = true;
+    //         $this->showLoginForm = false;
+    //         $this->authType = "signup";
+    //     }
+    // }
 
-    public function login()
-    {
-        if ($this->user = auth()->attempt(['email' => $this->email, 'password' => $this->password])) {
-            $this->user = auth()->user();
-            toast()->debug('Welcome back, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
-            $this->submit();
-        } else {
-            toast()->danger('Incorrect password.')->push();
-        }
-    }
+    // public function login()
+    // {
+    //     if ($this->user = auth()->attempt(['email' => $this->email, 'password' => $this->password])) {
+    //         $this->user = auth()->user();
+    //         toast()->debug('Welcome back, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
+    //         $this->submit();
+    //     } else {
+    //         toast()->danger('Incorrect password.')->push();
+    //     }
+    // }
 
-    public function signup()
-    {
-        // create user
-        $this->user = User::create([
-            'name' => ucwords($this->name),
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-        ]);
+    // public function signup()
+    // {
+    //     // create user
+    //     $this->user = User::create([
+    //         'name' => ucwords($this->name),
+    //         'email' => $this->email,
+    //         'password' => Hash::make($this->password),
+    //     ]);
 
-        // login user
-        auth()->attempt(['email' => $this->email, 'password' => $this->password]);
+    //     // login user
+    //     auth()->attempt(['email' => $this->email, 'password' => $this->password]);
 
-        // submit the form
-        toast()->debug('Thanks for joining, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
-        $this->submit();
-    }
+    //     // submit the form
+    //     toast()->debug('Thanks for joining, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
+    //     $this->submit();
+    // }
 
     public function submit()
     {
@@ -223,9 +223,9 @@ class PropertyPage extends Component
                 'slug' => Str::uuid()->toString(),
                 'property_id' => $this->property->id,
                 'user_id' => $this->user->id,
-                'checkin' => $this->checkin,
-                'checkout' => $this->checkout,
                 'nights' => $this->nights,
+                'checkin' => $this->checkin_date,
+                'checkout' => $this->checkout_date,
             ]);
         } catch (\Exception $e) {
             toast()->danger('Please refresh the page and try again. [' . $e->getCode() . ']', 'Server error')->push();
