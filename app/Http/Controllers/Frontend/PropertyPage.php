@@ -255,22 +255,23 @@ class PropertyPage extends Component
 
     public function submit()
     {
-        toast()->info('submit!')->push();
+        // toast()->info('submit!')->push();
 
-        // try {
-        //     $reservation = Reservation::create([
-        //         'slug' => Str::uuid()->toString(),
-        //         'property_id' => $this->property->id,
-        //         'user_id' => $this->user->id,
-        //         'nights' => $this->nights,
-        //         'checkin' => $this->checkin_date,
-        //         'checkout' => $this->checkout_date,
-        //     ]);
-        // } catch (\Exception $e) {
-        //     toast()->danger('Please refresh the page and try again. [' . $e->getCode() . ']', 'Server error')->push();
-        //     return;
-        // }
+        try {
+            $reservation = Reservation::create([
+                'slug' => Str::uuid()->toString(),
+                'property_id' => $this->property->id,
+                'user_id' => $this->user->id,
+                'nights' => $this->nights,
+                'checkin_date' => $this->checkin_date,
+                'checkout_date' => $this->checkout_date,
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            toast()->danger('Please refresh the page and try again. [' . $e->getCode() . ']', 'Server error')->push();
+            return;
+        }
 
-        // return redirect()->route('frontend.checkout', ['reservationSlug' => $reservation->slug]);
+        return redirect()->route('reservations.checkout', ['reservationSlug' => $reservation->slug]);
     }
 }

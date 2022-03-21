@@ -23,7 +23,7 @@ Route::name('frontend.')->prefix('/')->group(function () {
 
 /* Reservations */
 Route::name('reservation.')->prefix('reserve')->middleware('auth')->group(function () {
-    Route::get('/{id}', \App\Http\Controllers\Reservation\ReservationPage::class);
+    Route::get('/{slug}', \App\Http\Controllers\Reservation\ReservationPage::class)->name('checkout');
 });
 
 

@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Reservation;
 
 use App\Models\Property;
+use App\Models\Reservation;
 use App\Models\User;
 use Livewire\Component;
 
 class ReservationPage extends Component
 {
+    // Reservation data
+    public $reservation_slug;
+    public $reservation;
+
     // Property data
     public $property_id;
     public $property;
@@ -51,16 +56,19 @@ class ReservationPage extends Component
     {
         return view('pages.reservation.index')->layout('layouts.minimal');
     }
-    public function mount($id)
+    public function mount($slug)
     {
-        $this->property_id = $id;
+        $this->reservation_slug = $slug;
     }
 
     public function load()
     {
-        $this->property = Property::find($this->property_id);
-        $this->photo = $this->property->photos()->first();
-        $this->fees = $this->property->fees()->get();
+        $this->reservation = Reservation::find($this->reservation_slug);
+
+
+        // $this->property = Property::find($this->property_id);
+        // $this->photo = $this->property->photos()->first();
+        // $this->fees = $this->property->fees()->get();
 
         // Stripe setup
         $this->setupStripe();
