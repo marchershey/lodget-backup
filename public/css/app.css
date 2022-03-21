@@ -1,3 +1,148 @@
+.frontend-container {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    max-width: 1280px;
+    flex-direction: column
+}
+.frontend-container > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(2.5rem * var(--tw-space-y-reverse))
+}
+.frontend-section {
+    padding: 1.25rem
+}
+
+/* Minimal Container */
+.minimal-container {
+    margin: 2.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    width: 100%
+}
+@media (min-width: 640px) {
+    .minimal-container {
+        max-width: 1024px
+    }
+}
+
+/* .minimal-center-container {
+    @apply flex min-w-full items-start;
+}
+.minimal-section-spacing {
+    @apply flex flex-col space-y-5 w-full;
+}
+.minimal-section {
+    @apply bg-white p-5 space-y-5 sm:rounded-lg border border-gray-300;
+} */
+
+/* Calendar */
+#calendar .litepicker, #calendar .container__main, #calendar .container__months, #calendar .month-item {
+    width: 100% !important;
+    border-radius: 0.375rem !important;
+    padding: 0px !important;
+    text-align: center !important;
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+    --tw-shadow: 0 0 #0000 !important;
+    --tw-shadow-colored: 0 0 #0000 !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important
+}
+
+/* WEEK CONTAINER */
+#calendar .month-item-weekdays-row {
+    display: grid !important;
+    width: 100% !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important
+}
+
+/* WEEK ITEM */
+#calendar .month-item-weekdays-row div {
+    width: auto !important
+}
+
+/* DAYS CONTAINER */
+#calendar .container__days {
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important
+}
+
+/* DAY ITEM */
+#calendar .container__days div {
+    width: auto !important;
+    border-width: 1px !important;
+    border-color: transparent !important;
+    padding: 0px !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important
+}
+/* DAY ITEM DEFAULT HOVER */
+#calendar
+    .container__days
+    .day-item:hover:not(.is-start-date):not(.is-end-date):not(.is-locked) {
+    --tw-border-opacity: 1 !important;
+    border-color: rgb(37 99 235 / var(--tw-border-opacity)) !important;
+    --tw-text-opacity: 1 !important;
+    color: rgb(37 99 235 / var(--tw-text-opacity)) !important;
+    --tw-shadow: 0 0 #0000 !important;
+    --tw-shadow-colored: 0 0 #0000 !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important
+}
+#calendar .container__days .day-item:hover.is-start-date:hover, #calendar .container__days .day-item.is-end-date:hover {
+    border-color: transparent !important;
+    --tw-shadow: 0 0 #0000 !important;
+    --tw-shadow-colored: 0 0 #0000 !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important
+}
+/* RANGE START */
+#calendar .container__days .day-item.is-start-date {
+    --tw-bg-opacity: 1 !important;
+    background-color: rgb(37 99 235 / var(--tw-bg-opacity)) !important;
+    --tw-text-opacity: 1 !important;
+    color: rgb(255 255 255 / var(--tw-text-opacity)) !important
+}
+/* RANGE MIDDLE */
+#calendar .container__days .day-item.is-in-range {
+    --tw-bg-opacity: 1 !important;
+    background-color: rgb(191 219 254 / var(--tw-bg-opacity)) !important
+}
+/* RANGE END */
+#calendar .container__days .day-item.is-end-date {
+    --tw-bg-opacity: 1 !important;
+    background-color: rgb(37 99 235 / var(--tw-bg-opacity)) !important;
+    --tw-text-opacity: 1 !important;
+    color: rgb(255 255 255 / var(--tw-text-opacity)) !important
+}
+
+/* DAY ITEM LOCKED */
+#calendar
+    .container__days
+    .day-item.is-locked:not(.is-start-date):not(.is-end-date):not(.is-in-range) {
+    --tw-text-opacity: 1 !important;
+    color: rgb(209 213 219 / var(--tw-text-opacity)) !important
+}
+/* DAY ITEM IN RANGE DISABLED */
+
+.splide__slide img {
+    opacity: 0.5;
+}
+
+.splide__slide.is-active img {
+    opacity: 1;
+}
+
+.splide__slide.is-active {
+    border: 0 !important;
+}
+
 /*
 ! tailwindcss v3.0.23 | MIT License | https://tailwindcss.com
 *//*
@@ -694,55 +839,6 @@ select {
   --tw-aspect-h: 7;
 }
 /* Elements */
-.frontend-container {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 1280px;
-  padding: 1.25rem;
-}
-.minimal-container {
-  margin-left: auto;
-  margin-right: auto;
-  height: auto;
-  width: 100%;
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-}
-@media (min-width: 640px) {
-
-  .minimal-container {
-    max-width: 28rem;
-  }
-}
-.minimal-section-spacing {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-}
-.minimal-section-spacing > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
-}
-.minimal-section > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
-}
-.minimal-section {
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-  padding: 1.25rem;
-}
-@media (min-width: 640px) {
-
-  .minimal-section {
-    border-radius: 0.5rem;
-  }
-}
 .section-spacing {
   display: flex;
   flex-direction: column;
@@ -1163,9 +1259,6 @@ select {
 .mr-3 {
   margin-right: 0.75rem;
 }
-.mt-10 {
-  margin-top: 2.5rem;
-}
 .-mt-6 {
   margin-top: -1.5rem;
 }
@@ -1428,6 +1521,9 @@ select {
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+.flex-row {
+  flex-direction: row;
+}
 .flex-col {
   flex-direction: column;
 }
@@ -1501,20 +1597,10 @@ select {
   margin-top: calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2.5rem * var(--tw-space-y-reverse));
 }
-.space-y-6 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
-}
 .space-y-3 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
-}
-.space-x-10 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(2.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(2.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 .space-x-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
@@ -1530,6 +1616,11 @@ select {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+.space-y-0 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0px * var(--tw-space-y-reverse));
 }
 .self-start {
   align-self: flex-start;
@@ -1648,16 +1739,13 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
-.bg-primary {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
-}
-.bg-black\/40 {
-  background-color: rgb(0 0 0 / 0.4);
-}
 .bg-muted {
   --tw-bg-opacity: 1;
   background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+}
+.bg-primary {
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
 .bg-blue-600 {
   --tw-bg-opacity: 1;
@@ -1671,9 +1759,6 @@ select {
 }
 .bg-center {
   background-position: center;
-}
-.bg-bottom {
-  background-position: bottom;
 }
 .object-cover {
   -o-object-fit: cover;
@@ -1756,14 +1841,6 @@ select {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
-.py-5 {
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
-}
-.py-3 {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-}
 .pt-5 {
   padding-top: 1.25rem;
 }
@@ -1778,9 +1855,6 @@ select {
 }
 .pr-3 {
   padding-right: 0.75rem;
-}
-.pb-32 {
-  padding-bottom: 8rem;
 }
 .pt-3 {
   padding-top: 0.75rem;
@@ -1824,10 +1898,6 @@ select {
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
-}
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1841,9 +1911,6 @@ select {
 .font-bold {
   font-weight: 700;
 }
-.font-extrabold {
-  font-weight: 800;
-}
 .font-black {
   font-weight: 900;
 }
@@ -1856,9 +1923,6 @@ select {
 .italic {
   font-style: italic;
 }
-.leading-tight {
-  line-height: 1.25;
-}
 .leading-6 {
   line-height: 1.5rem;
 }
@@ -1870,9 +1934,6 @@ select {
 }
 .leading-none {
   line-height: 1;
-}
-.tracking-wide {
-  letter-spacing: 0.025em;
 }
 .tracking-widest {
   letter-spacing: 0.1em;
@@ -1920,10 +1981,6 @@ select {
 .text-dark {
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity));
-}
-.text-primary-lighter {
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 .text-yellow-500 {
   --tw-text-opacity: 1;
@@ -2090,110 +2147,9 @@ select {
         }
     }
 
-.splide__slide img {
-    opacity: 0.5;
-}
+/* Layouts */
 
-.splide__slide.is-active img {
-    opacity: 1;
-}
-
-.splide__slide.is-active {
-    border: 0 !important;
-}
-
-/* Calendar */
-#calendar .litepicker, #calendar .container__main, #calendar .container__months, #calendar .month-item {
-  width: 100% !important;
-  border-radius: 0.375rem !important;
-  padding: 0px !important;
-  text-align: center !important;
-  font-size: 1rem !important;
-  line-height: 1.5rem !important;
-  --tw-shadow: 0 0 #0000 !important;
-  --tw-shadow-colored: 0 0 #0000 !important;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
-}
-
-/* WEEK CONTAINER */
-#calendar .month-item-weekdays-row {
-  display: grid !important;
-  width: 100% !important;
-  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
-}
-
-/* WEEK ITEM */
-#calendar .month-item-weekdays-row div {
-  width: auto !important;
-}
-
-/* DAYS CONTAINER */
-#calendar .container__days {
-  display: grid !important;
-  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
-}
-
-/* DAY ITEM */
-#calendar .container__days div {
-  width: auto !important;
-  border-width: 1px !important;
-  border-color: transparent !important;
-  padding: 0px !important;
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
-  outline: 2px solid transparent !important;
-  outline-offset: 2px !important;
-}
-/* DAY ITEM DEFAULT HOVER */
-#calendar
-    .container__days
-    .day-item:hover:not(.is-start-date):not(.is-end-date):not(.is-locked) {
-  --tw-border-opacity: 1 !important;
-  border-color: rgb(37 99 235 / var(--tw-border-opacity)) !important;
-  --tw-text-opacity: 1 !important;
-  color: rgb(37 99 235 / var(--tw-text-opacity)) !important;
-  --tw-shadow: 0 0 #0000 !important;
-  --tw-shadow-colored: 0 0 #0000 !important;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
-  outline: 2px solid transparent !important;
-  outline-offset: 2px !important;
-}
-#calendar .container__days .day-item:hover.is-start-date:hover, #calendar .container__days .day-item.is-end-date:hover {
-  border-color: transparent !important;
-  --tw-shadow: 0 0 #0000 !important;
-  --tw-shadow-colored: 0 0 #0000 !important;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
-  outline: 2px solid transparent !important;
-  outline-offset: 2px !important;
-}
-/* RANGE START */
-#calendar .container__days .day-item.is-start-date {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity)) !important;
-  --tw-text-opacity: 1 !important;
-  color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
-}
-/* RANGE MIDDLE */
-#calendar .container__days .day-item.is-in-range {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(191 219 254 / var(--tw-bg-opacity)) !important;
-}
-/* RANGE END */
-#calendar .container__days .day-item.is-end-date {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity)) !important;
-  --tw-text-opacity: 1 !important;
-  color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
-}
-
-/* DAY ITEM LOCKED */
-#calendar
-    .container__days
-    .day-item.is-locked:not(.is-start-date):not(.is-end-date):not(.is-in-range) {
-  --tw-text-opacity: 1 !important;
-  color: rgb(209 213 219 / var(--tw-text-opacity)) !important;
-}
-/* DAY ITEM IN RANGE DISABLED */
+/* Components */
 
 .placeholder\:normal-case::-moz-placeholder {
   text-transform: none;
@@ -2514,22 +2470,12 @@ select {
     width: 16rem;
   }
 
-  .md\:w-\[400px\] {
-    width: 400px;
-  }
-
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .md\:flex-col {
     flex-direction: column;
-  }
-
-  .md\:space-y-10 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(2.5rem * var(--tw-space-y-reverse));
   }
 
   .md\:rounded-b-lg {
@@ -2546,17 +2492,8 @@ select {
     padding-left: 16rem;
   }
 
-  .md\:text-6xl {
-    font-size: 3.75rem;
-    line-height: 1;
-  }
-
   .md\:font-medium {
     font-weight: 500;
-  }
-
-  .md\:font-bold {
-    font-weight: 700;
   }
 }
 

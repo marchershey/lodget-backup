@@ -1,0 +1,14 @@
+/* Minimal Container */
+.minimal-container {
+    @apply mx-auto h-auto w-full sm:max-w-screen-lg m-10;
+}
+
+/* .minimal-center-container {
+    @apply flex min-w-full items-start;
+}
+.minimal-section-spacing {
+    @apply flex flex-col space-y-5 w-full;
+}
+.minimal-section {
+    @apply bg-white p-5 space-y-5 sm:rounded-lg border border-gray-300;
+} */

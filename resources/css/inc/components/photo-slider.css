@@ -1,0 +1,11 @@
+.splide__slide img {
+    opacity: 0.5;
+}
+
+.splide__slide.is-active img {
+    opacity: 1;
+}
+
+.splide__slide.is-active {
+    border: 0 !important;
+}
