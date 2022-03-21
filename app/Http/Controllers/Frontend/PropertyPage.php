@@ -38,12 +38,23 @@ class PropertyPage extends Component
     public $email;
     public $password;
     public $password_confirmation;
+    public $phone;
+    public $birthdate;
 
     // Page states
     public $authType = "auth";
     public $showCalendar = true;
     public $showLoginForm = false;
     public $showSignupForm = false;
+
+    protected $rules = [
+        'email' => 'required|email|max:250',
+        'password' => 'required|min:6|max:250|confirmed',
+        'password_confirmation' => 'required|min:6|max:250',
+        'name' => 'required|max:250',
+        'phone' => 'required',
+        'birthdate' => 'required|date_format:m/d/Y|before:-18 years',
+    ];
 
 
     public function render()
@@ -173,65 +184,93 @@ class PropertyPage extends Component
         }
     }
 
-    // public function auth()
-    // {
-    //     $this->user = User::where('email', $this->email)->first();
+    public function auth()
+    {
+        $this->validate([
+            'email' => 'required|email|max:250',
+        ]);
 
-    //     if ($this->user) {
-    //         $this->showLoginForm = true;
-    //         $this->showSignupForm = false;
-    //         $this->authType = "login";
-    //     } else {
-    //         $this->showSignupForm = true;
-    //         $this->showLoginForm = false;
-    //         $this->authType = "signup";
-    //     }
-    // }
+        $this->user = User::where('email', $this->email)->first();
 
-    // public function login()
-    // {
-    //     if ($this->user = auth()->attempt(['email' => $this->email, 'password' => $this->password])) {
-    //         $this->user = auth()->user();
-    //         toast()->debug('Welcome back, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
-    //         $this->submit();
-    //     } else {
-    //         toast()->danger('Incorrect password.')->push();
-    //     }
-    // }
+        if ($this->user) {
+            $this->showLoginForm = true;
+            $this->showSignupForm = false;
+            $this->authType = "login";
+        } else {
+            $this->showSignupForm = true;
+            $this->showLoginForm = false;
+            $this->authType = "signup";
 
-    // public function signup()
-    // {
-    //     // create user
-    //     $this->user = User::create([
-    //         'name' => ucwords($this->name),
-    //         'email' => $this->email,
-    //         'password' => Hash::make($this->password),
-    //     ]);
+            // since we're showing phone and birthdate input fields
+            // lets make sure we mask them
+            $this->dispatchBrowserEvent('maskAllElements');
+        }
+    }
 
-    //     // login user
-    //     auth()->attempt(['email' => $this->email, 'password' => $this->password]);
+    public function login()
+    {
+        // validate user data
+        $this->validate([
+            'email' => 'required|email|max:250',
+            'password' => 'required|min:6|max:250',
+        ]);
 
-    //     // submit the form
-    //     toast()->debug('Thanks for joining, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
-    //     $this->submit();
-    // }
+        // try to authenticate user
+        if ($this->user = auth()->attempt(['email' => $this->email, 'password' => $this->password])) {
+            $this->user = auth()->user();
+            toast()->debug('Welcome back, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
+            $this->submit();
+        } else {
+            toast()->danger('Incorrect password.')->push();
+        }
+    }
+
+    public function signup()
+    {
+        // validate user data
+        $this->validate([
+            'email' => 'required|email|max:250',
+            'password' => 'required|min:6|max:250|confirmed',
+            'name' => 'required|max:250',
+            'phone' => 'required',
+            'birthdate' => 'required|date_format:m/d/Y|before:-18 years',
+        ]);
+
+        // create user
+        $this->user = User::create([
+            'name' => ucwords($this->name),
+            'email' => $this->email,
+            'password' => Hash::make($this->password),
+            'phone' => $this->phone,
+            'birthdate' => Carbon::parse($this->birthdate)->toDateString(),
+        ]);
+
+        // login user
+        auth()->attempt(['email' => $this->email, 'password' => $this->password]);
+
+        // submit the form
+        toast()->debug('Thanks for joining, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
+        $this->submit();
+    }
 
     public function submit()
     {
-        try {
-            $reservation = Reservation::create([
-                'slug' => Str::uuid()->toString(),
-                'property_id' => $this->property->id,
-                'user_id' => $this->user->id,
-                'nights' => $this->nights,
-                'checkin' => $this->checkin_date,
-                'checkout' => $this->checkout_date,
-            ]);
-        } catch (\Exception $e) {
-            toast()->danger('Please refresh the page and try again. [' . $e->getCode() . ']', 'Server error')->push();
-            return;
-        }
+        toast()->info('submit!')->push();
 
-        return redirect()->route('frontend.checkout', ['reservationSlug' => $reservation->slug]);
+        // try {
+        //     $reservation = Reservation::create([
+        //         'slug' => Str::uuid()->toString(),
+        //         'property_id' => $this->property->id,
+        //         'user_id' => $this->user->id,
+        //         'nights' => $this->nights,
+        //         'checkin' => $this->checkin_date,
+        //         'checkout' => $this->checkout_date,
+        //     ]);
+        // } catch (\Exception $e) {
+        //     toast()->danger('Please refresh the page and try again. [' . $e->getCode() . ']', 'Server error')->push();
+        //     return;
+        // }
+
+        // return redirect()->route('frontend.checkout', ['reservationSlug' => $reservation->slug]);
     }
 }

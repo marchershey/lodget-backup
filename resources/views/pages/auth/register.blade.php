@@ -1,9 +1,10 @@
-<div class="minimal-section-spacing">
+<div class="minimal-container">
     <div class="text-center">
         <h1 class="section-heading font-bold">Create an account</h1>
         <span class="text-muted text-xs">Complete the form below to create your new account</span>
     </div>
-    <form wire:submit.prevent="register" class="minimal-section">
+
+    <form wire:submit.prevent="register" class="minimal-panel">
 
         {{-- Email --}}
         <x-forms.text wireId="email" label="Email address" />
@@ -33,7 +34,7 @@
                         <input required checked wire:model="terms" id="terms" aria-describedby="terms-description" name="terms" type="checkbox" class="text-primary h-4 w-4 rounded border-gray-300">
                     </div>
                     <div class="ml-3">
-                        <div id="terms-description" class="text-sm font-medium @error('terms') text-red-500 @else text-gray-700 @enderror">I have read and agree to the <span class="text-link">Terms</span> and <span class="text-link">Privacy Policy</span></div>
+                        <div id="terms-description" class="@error('terms') text-red-500 @else text-gray-700 @enderror text-sm font-medium">I have read and agree to the <span class="text-link">Terms</span> and <span class="text-link">Privacy Policy</span></div>
                     </div>
                 </label>
             </div>

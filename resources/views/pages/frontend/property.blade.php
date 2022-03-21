@@ -100,26 +100,7 @@
                             </div>
                         </div>
 
-
-                        {{-- Auth --}}
-                        {{-- @guest
-                            <div>
-                                <form wire:submit.prevent="{{ $authType }}" class="space-y-3" autocomplete="off">
-                                    <div class="text-center text-lg font-semibold">Log in or sign up to reserve</div>
-                                    <x-forms.text wireId="email" label="Email address" />
-                                    <div x-show="showLoginForm" x-cloak>
-                                        <x-forms.text wireId="password" inputType="password" label="Password" />
-                                    </div>
-                                    <div x-show="showSignupForm" x-cloak class="space-y-3">
-                                        <x-forms.text wireId="name" label="Full name" />
-                                        <x-forms.text wireId="password" inputType="password" label="Password" />
-                                        <x-forms.text wireId="password_confirmation" inputType="password" label="Confirm Password" />
-                                    </div>
-
-                                    <button type="submit" class="button button-primary w-full">Continue</button>
-                                </form>
-                            </div>
-                        @endauth --}}
+                        <hr>
 
 
                         {{-- Prices Breakdown --}}
@@ -148,10 +129,33 @@
                             </tr>
                         </table>
 
+                        <hr>
+
                         {{-- Continue button --}}
-                        <div>
-                            <button wire:click="sumbit" type="button" class="button button-primary w-full">Reserve dates</button>
-                        </div>
+                        @auth
+                            <div>
+                                <button wire:click="submit" type="button" class="button button-primary w-full">Reserve dates</button>
+                            </div>
+                        @else
+                            <div>
+                                <form wire:submit.prevent="{{ $authType }}" class="space-y-3" autocomplete="off">
+                                    <div class="text-center text-lg font-semibold">Sign in to reserve your dates</div>
+                                    <x-forms.text wireId="email" label="Email address" />
+                                    <div x-show="showLoginForm" x-cloak>
+                                        <x-forms.text wireId="password" inputType="password" label="Password" />
+                                    </div>
+                                    <div x-show="showSignupForm" x-cloak class="space-y-3">
+                                        <x-forms.text wireId="name" label="Full name" inputClass="capitalize" />
+                                        <x-forms.text wireId="password" inputType="password" label="Password" />
+                                        <x-forms.text wireId="password_confirmation" inputType="password" label="Confirm Password" />
+                                        <x-forms.text wireId="phone" label="Phone Number" inputClass="phone" />
+                                        <x-forms.text wireId="birthdate" label="Birthdate" inputClass="date" />
+                                    </div>
+
+                                    <button type="submit" class="button button-primary w-full">Continue</button>
+                                </form>
+                            </div>
+                        @endauth
                     </div>
                 </div>
             </div>

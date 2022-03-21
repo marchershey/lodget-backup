@@ -1,6 +1,9 @@
 /* Minimal Container */
 .minimal-container {
-    @apply mx-auto h-auto w-full sm:max-w-screen-lg m-10;
+    @apply flex flex-col h-full w-full max-w-lg mx-auto space-y-10 py-10;
+}
+.minimal-panel {
+    @apply bg-white rounded-lg border border-gray-300 w-full space-y-5 p-5;
 }
 
 /* .minimal-center-container {

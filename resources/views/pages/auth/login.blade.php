@@ -1,9 +1,10 @@
-<div class="minimal-section-spacing">
+<div class="minimal-container">
     <div class="text-center">
         <h1 class="section-heading font-bold">Sign into your account</h1>
         <span class="text-muted text-xs">Enter your email address and password to continue</span>
     </div>
-    <form wire:submit.prevent="login" class="minimal-section">
+
+    <form wire:submit.prevent="login" class="minimal-panel">
         <x-forms.text wireId="email" label="Email address" />
         <x-forms.text wireId="password" label="Password" inputType="password" />
         <div class="flex items-center justify-between">

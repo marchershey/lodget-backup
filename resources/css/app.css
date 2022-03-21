@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Layouts */
-@import "./inc/layouts/frontend.css";
-@import "./inc/layouts/minimal.css";
-
-/* Components */
-@import "./inc/components/calendar.css";
-@import "./inc/components/photo-slider.css";
-
 @layer base {
     [x-cloak] {
         display: none !important;
@@ -174,3 +166,11 @@
         animation: cursor-blink 1.5s steps(2) infinite;
     }
 }
+
+/* Layouts */
+@import "./inc/layouts/frontend.css";
+@import "./inc/layouts/minimal.css";
+
+/* Components */
+@import "./inc/components/calendar.css";
+@import "./inc/components/photo-slider.css";
