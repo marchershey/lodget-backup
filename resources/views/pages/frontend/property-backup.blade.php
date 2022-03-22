@@ -100,26 +100,7 @@
                             </div>
                         </div>
 
-
-                        {{-- Auth --}}
-                        @guest
-                            <div>
-                                <form wire:submit.prevent="{{ $authType }}" class="space-y-3" autocomplete="off">
-                                    <div class="text-center text-lg font-semibold">Log in or sign up to reserve</div>
-                                    <x-forms.text wireId="email" label="Email address" />
-                                    <div x-show="showLoginForm" x-cloak>
-                                        <x-forms.text wireId="password" inputType="password" label="Password" />
-                                    </div>
-                                    <div x-show="showSignupForm" x-cloak class="space-y-3">
-                                        <x-forms.text wireId="name" label="Full name" />
-                                        <x-forms.text wireId="password" inputType="password" label="Password" />
-                                        <x-forms.text wireId="password_confirmation" inputType="password" label="Confirm Password" />
-                                    </div>
-
-                                    <button type="submit" class="button button-primary w-full">Continue</button>
-                                </form>
-                            </div>
-                        @endauth
+                        <hr>
 
 
                         {{-- Prices Breakdown --}}
@@ -148,51 +129,33 @@
                             </tr>
                         </table>
 
+                        <hr>
+
                         {{-- Continue button --}}
                         @auth
                             <div>
-                                <button type="submit" class="button button-primary w-full">Continue</button>
+                                <button wire:click="submit" type="button" class="button button-primary w-full">Reserve dates</button>
+                            </div>
+                        @else
+                            <div>
+                                <form wire:submit.prevent="{{ $authType }}" class="space-y-3" autocomplete="off">
+                                    <div class="text-center text-lg font-semibold">Sign in to reserve your dates</div>
+                                    <x-forms.text wireId="email" label="Email address" />
+                                    <div x-show="showLoginForm" x-cloak>
+                                        <x-forms.text wireId="password" inputType="password" label="Password" />
+                                    </div>
+                                    <div x-show="showSignupForm" x-cloak class="space-y-3">
+                                        <x-forms.text wireId="name" label="Full name" inputClass="capitalize" />
+                                        <x-forms.text wireId="password" inputType="password" label="Password" />
+                                        <x-forms.text wireId="password_confirmation" inputType="password" label="Confirm Password" />
+                                        <x-forms.text wireId="phone" label="Phone Number" inputClass="phone" />
+                                        <x-forms.text wireId="birthdate" label="Birthdate" inputClass="date" />
+                                    </div>
+
+                                    <button type="submit" class="button button-primary w-full">Continue</button>
+                                </form>
                             </div>
                         @endauth
-
-                        {{-- Discount codes --}}
-                        {{-- <div>
-                            <hr class="mb-3">
-                            <div x-data="{discount: false}">
-                                <span x-on:click="discount = !discount" class="text-link">Enter discount code</span>
-                                <div x-show="discount" x-cloak class="mt-3 rounded-lg bg-gray-100 p-3 text-center text-xs">
-                                    Sorry, there are no discount codes active at this time.
-                                </div>
-                            </div>
-                        </div> --}}
-
-                        {{-- <div class="flex hidden flex-col space-y-5">
-                            <hr>
-                            <div class="text-muted text-sm">
-                                <div class="flex justify-between">
-                                    <span>${{ number_format($property->rate, 2) }} x {{ $nights }} nights</span>
-                                    <span>${{ number_format($nightlyRate, 2) }}</span>
-                                </div>
-                                @if ($fees)
-                                    @foreach ($fees as $fee)
-                                        <div class="flex justify-between">
-                                            <span>{{ $fee['name'] }}</span>
-                                            <span>${{ number_format($fee['amount'], 2) }}</span>
-                                        </div>
-                                    @endforeach
-                                @endif
-                                @if ($tax)
-                                    <div class="flex justify-between">
-                                        <span>Tax</span>
-                                        <span>${{ number_format($tax, 2) }}</span>
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="mb-5 flex items-baseline justify-between text-lg font-semibold">
-                                <span>Total</span>
-                                <span>${{ number_format($totalCost ?? 0, 2) }}</span>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
             </div>

@@ -10,4 +10,15 @@ class Reservation extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
+
+    // Dont need this due to deffered loading 
+    // public function getRouteKeyName()
+    // {
+    //     return 'slug';
+    // }
 }

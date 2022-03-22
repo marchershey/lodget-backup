@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Reservation;
+namespace App\Http\Controllers\Frontend;
 
+use App\Helpers\Currency;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use Livewire\Component;
 
-class ReservationPage extends Component
+class CheckoutPage extends Component
 {
     // Reservation data
     public $reservation_slug;
@@ -54,7 +55,7 @@ class ReservationPage extends Component
 
     public function render()
     {
-        return view('pages.reservation.index')->layout('layouts.minimal');
+        return view('pages.frontend.checkout')->layout('layouts.minimal');
     }
     public function mount($slug)
     {
@@ -63,11 +64,13 @@ class ReservationPage extends Component
 
     public function load()
     {
-        $this->reservation = Reservation::find($this->reservation_slug);
-
+        $this->reservation = Reservation::where('slug', $this->reservation_slug)->first();
+        $this->property = $this->reservation->property;
+        $this->photo = $this->property->photos()->first();
+        $this->fees = $this->property->fees()->get();
 
         // $this->property = Property::find($this->property_id);
-        // $this->photo = $this->property->photos()->first();
+        // $this->photo = $this->property->photo()->first();
         // $this->fees = $this->property->fees()->get();
 
         // Stripe setup
@@ -112,27 +115,29 @@ class ReservationPage extends Component
         $this->pricing_total = $this->pricing_base;
 
         // Calculate fees
-        foreach ($this->fees as $fee) {
-            if ($fee['type'] == "fixed") {
-                // $fee is a fixed type
-                $name = (string) $fee['name'];
-                $amount = (int) $fee['amount'];
-            } elseif ($fee['type'] == "percentage") {
-                // $fee is a 'percentage' type
-                $name = (string) $fee['name'];
-                $amount = (float) ($fee['amount'] * 0.01) * $this->pricing_base;
-                // $amount on a percentage type is calculated 
+        if ($this->fees) {
+            foreach ($this->fees as $fee) {
+                if ($fee['type'] == "fixed") {
+                    // $fee is a fixed type
+                    $name = (string) $fee['name'];
+                    $amount = (float) $fee['amount'];
+                } elseif ($fee['type'] == "percentage") {
+                    // $fee is a 'percentage' type
+                    $name = (string) $fee['name'];
+                    $amount = (float) ($fee['amount'] * 0.01) * $this->pricing_base;
+                    // $amount on a percentage type is calculated 
+                }
+
+                // Add fee to an array with calculated total
+                // This helps display the correct amount on percentage types
+                $this->pricing_fees[] = [
+                    'name' => $name,
+                    'amount' => $amount,
+                ];
+
+                // Add fee to total
+                $this->pricing_total = $this->pricing_total + $amount;
             }
-
-            // Add fee to an array with calculated total
-            // This helps display the correct amount on percentage types
-            $this->pricing_fees[] = [
-                'name' => $name,
-                'amount' => $amount,
-            ];
-
-            // Add fee to total
-            $this->pricing_total = $this->pricing_total + $amount;
         }
     }
 
@@ -172,5 +177,11 @@ class ReservationPage extends Component
         $user->save();
 
         dd($setupIntent);
+
+        // Update reservation
+        // dd($user->charge(Currency::toPennies($this->pricing_total), $setupIntent['payment_method'], [
+        //     'off_session' => true,
+        //     'confirm' => true,
+        // ]));
     }
 }

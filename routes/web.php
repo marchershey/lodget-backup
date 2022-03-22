@@ -18,12 +18,9 @@ Route::get('/signup', \App\Http\Controllers\Auth\Register::class)->name('registe
 Route::name('frontend.')->prefix('/')->group(function () {
     Route::get('/', \App\Http\Controllers\Frontend\LandingPage::class)->name('landing');
     Route::get('/property/{property_id}', App\Http\Controllers\Frontend\PropertyPage::class)->name('property');
-});
+    Route::get('/checkout/{slug}', App\Http\Controllers\Frontend\CheckoutPage::class)->name('checkout');
 
-
-/* Reservations */
-Route::name('reservation.')->prefix('reserve')->middleware('auth')->group(function () {
-    Route::get('/{slug}', \App\Http\Controllers\Reservation\ReservationPage::class)->name('checkout');
+    // Route::view('/success', 'pages.frontend.success');
 });
 
 
@@ -46,11 +43,15 @@ Route::name('host.')->prefix('host')->group(function () {
 Route::get('/test', function () {
 
     // return auth()->user()->updateDefaultPaymentMethodFromStripe();
-    $dd = auth()->user()->charge(500, auth()->user()->stripe_pm, [
-        'off_session' => true,
-        'confirm' => true,
-    ]);
-    dd($dd);
+    dd($user->charge(
+        App\Helpers\Currency::toPennies($this->pricing_total),
+        $setupIntent['payment_method'],
+        [
+            'off_session' => true,
+            'confirm' => true,
+        ]
+    ));
+    // dd($dd);
 });
 
 Route::get('/logout', function () {

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('nights');
             $table->string('checkin_date');
             $table->string('checkout_date');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

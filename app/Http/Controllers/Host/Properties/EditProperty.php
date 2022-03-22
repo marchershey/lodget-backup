@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\Host\Properties;
 
 use App\Models\Amenity;
+use App\Models\Fee;
 use App\Models\Photo;
 use App\Models\Property;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Usernotnull\Toast\Concerns\WireToast;
 
 class EditProperty extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WireToast;
 
     // states
     public $ready = true;
 
     // property information
     public $property_id;
+    public $property;
     public $name;
     public $address_street;
     public $address_city;
@@ -100,6 +103,8 @@ class EditProperty extends Component
     {
         if ($property = Property::find($this->property_id)) {
 
+            $this->property = $property;
+
             // load property data
             $this->name = $property->name;
             $this->address_street = $property->address_street;
@@ -173,8 +178,6 @@ class EditProperty extends Component
     public function removeAmenity($id)
     {
         unset($this->amenities[$id]);
-        $amenity = Amenity::find($id);
-        $amenity->delete();
     }
 
     /**
@@ -210,59 +213,85 @@ class EditProperty extends Component
         // Validate
         $this->validate();
 
-        // Property Data
-        $property = Property::find($this->property_id);
-        $property->name = $this->name;
-        $property->address_street = $this->address_street;
-        $property->address_city = $this->address_city;
-        $property->address_state = $this->address_state;
-        $property->addresS_zip = $this->address_zip;
-        $property->listing_headline = $this->listing_headline;
-        $property->listing_description = $this->listing_description;
-        $property->guest_count = $this->guest_count;
-        $property->bedroom_count = $this->bedroom_count;
-        $property->bed_count = $this->bed_count;
-        $property->bathroom_count = $this->bathroom_count;
-        $property->rate = number_format($this->rate, 2);
-        $property->tax_rate = $this->tax_rate;
-        $property->calendar_color = $this->calendar_color;
-        $property->user_id = 1;
-        $property->save();
+        try {
+            // Property Data
+            $property = Property::find($this->property_id);
+            $property->name = $this->name;
+            $property->address_street = $this->address_street;
+            $property->address_city = $this->address_city;
+            $property->address_state = $this->address_state;
+            $property->addresS_zip = $this->address_zip;
+            $property->listing_headline = $this->listing_headline;
+            $property->listing_description = $this->listing_description;
+            $property->guest_count = $this->guest_count;
+            $property->bedroom_count = $this->bedroom_count;
+            $property->bed_count = $this->bed_count;
+            $property->bathroom_count = $this->bathroom_count;
+            $property->rate = number_format($this->rate, 2);
+            $property->tax_rate = $this->tax_rate;
+            $property->calendar_color = $this->calendar_color;
+            $property->user_id = 1;
+            $property->save();
 
-        // Amenities
-        if ($this->amenities) {
-            foreach ($this->amenities as $text) {
-                $amenity = new Amenity();
-                $amenity->text = $text;
-                $amenity->property_id = $property->id;
-                $amenity->user_id = 1;
+            // Fees
+            foreach ($this->property->fees as $fee) {
+                $fee->delete();
             }
-        }
-
-        // Photos
-        if ($this->stagedPhotos) {
-            $lastOrder = Photo::where('property_id', $this->property_id)->get('order')->last()->order;
-            foreach ($this->stagedPhotos as $stagedPhoto) {
-                // increase last order
-                $lastOrder++;
-
-                // upload photo
-                $path = $stagedPhoto->store('photos', 'public');
-
-                // store photo in database
-                $photo = new Photo();
-                $photo->property_id = $property->id;
-                $photo->user_id = 1;
-                $photo->name = $stagedPhoto->getClientOriginalName();
-                $photo->size = $stagedPhoto->getSize();
-                $photo->mime = $stagedPhoto->getMimeType();
-                $photo->path = $path;
-                $photo->order = $lastOrder;
-                $photo->save();
+            if ($this->fees) {
+                foreach ($this->fees as $fee) {
+                    $newFee = new Fee();
+                    $newFee->name = $fee['name'];
+                    $newFee->amount = $fee['amount'];
+                    $newFee->type = $fee['type'];
+                    $newFee->property_id = $property->id;
+                    $newFee->user_id = 1;
+                    $newFee->save();
+                }
             }
-        }
 
-        // redirect back to properties list
-        return redirect()->route('host.properties.index');
+            // Amenities
+            foreach ($this->property->amenities as $amenity) {
+                $amenity->delete();
+            }
+            if ($this->amenities) {
+                foreach ($this->amenities as $text) {
+                    $amenity = new Amenity();
+                    $amenity->text = $text;
+                    $amenity->property_id = $property->id;
+                    $amenity->user_id = 1;
+                    $amenity->save();
+                }
+            }
+
+            // Photos
+            if ($this->stagedPhotos) {
+                $lastOrder = Photo::where('property_id', $this->property_id)->get('order')->last()->order;
+                foreach ($this->stagedPhotos as $stagedPhoto) {
+                    // increase last order
+                    $lastOrder++;
+
+                    // upload photo
+                    $path = $stagedPhoto->store('photos', 'public');
+
+                    // store photo in database
+                    $photo = new Photo();
+                    $photo->property_id = $property->id;
+                    $photo->user_id = 1;
+                    $photo->name = $stagedPhoto->getClientOriginalName();
+                    $photo->size = $stagedPhoto->getSize();
+                    $photo->mime = $stagedPhoto->getMimeType();
+                    $photo->path = $path;
+                    $photo->order = $lastOrder;
+                    $photo->save();
+                }
+            }
+
+            toast()->success($this->property->name . " updated successfully!")->pushOnNextPage();
+
+            // redirect back to properties list
+            return redirect()->route('host.properties.index');
+        } catch (\Exception $e) {
+            toast()->danger($e)->push();
+        }
     }
 }

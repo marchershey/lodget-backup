@@ -100,7 +100,7 @@ class PropertyPage extends Component
 
     /**
      * This is just a notification action. If a user presses the "check avail" button
-     * they will get a notification telling them to check 
+     * they will get a notification telling them to select their dates
      */
     public function checkAvailabilty()
     {
@@ -255,8 +255,6 @@ class PropertyPage extends Component
 
     public function submit()
     {
-        // toast()->info('submit!')->push();
-
         try {
             $reservation = Reservation::create([
                 'slug' => Str::uuid()->toString(),
@@ -267,11 +265,10 @@ class PropertyPage extends Component
                 'checkout_date' => $this->checkout_date,
             ]);
         } catch (\Exception $e) {
-            dd($e);
             toast()->danger('Please refresh the page and try again. [' . $e->getCode() . ']', 'Server error')->push();
             return;
         }
 
-        return redirect()->route('reservations.checkout', ['reservationSlug' => $reservation->slug]);
+        return redirect()->route('frontend.checkout', ['slug' => $reservation->slug]);
     }
 }

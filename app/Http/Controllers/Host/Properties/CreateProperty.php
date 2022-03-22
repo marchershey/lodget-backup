@@ -207,6 +207,7 @@ class CreateProperty extends Component
         $property->user_id = 1;
         $property->save();
 
+        // Fees
         if ($this->fees) {
             foreach ($this->fees as $fee) {
                 $newFee = new Fee();
