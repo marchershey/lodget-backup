@@ -1,12 +1,11 @@
-<x-layouts.host-dashboard>
-    <div class="flex flex-col space-y-5">
+    <div class="flex flex-col space-y-5" wire:init="load">
         {{-- Recent Reservations --}}
         <div class="section">
-            <div class="hidden panel sm:block md:hidden lg:block">
+            <div class="panel hidden sm:block md:hidden lg:block" wire:ignore>
                 <div id="calendar-container" class=""></div>
             </div>
             <div class="lg:hidden">
-                <div class="flex items-center justify-center p-5 space-x-5 text-center text-white rounded-lg bg-primary">
+                <div class="bg-primary flex items-center justify-center space-x-5 rounded-lg p-5 text-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-circle" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                         <circle cx="12" cy="12" r="9"></circle>
@@ -101,13 +100,28 @@
                         },
                     ],
                 }
-                let calendar = new Calendar(calendarEl, {
+                window.calendar = new Calendar(calendarEl, {
                     ...defaultCalendarOptions,
                     ...calendarEvents
                 });
 
                 calendar.render();
             }
+
+            window.addEventListener('add-reservations-to-calendar', event => {
+                var reservations = event.detail.reservations
+
+                reservations.forEach(reservation => {
+                    console.log(reservation);
+                    calendar.addEvent({
+                        title: reservation.property_name + ': ' + reservation.guest_name,
+                        start: reservation.checkin_date,
+                        end: reservation.checkout_date,
+                        color: reservation.color,
+                        allDay: true
+                    });
+                });
+
+            })
         </script>
     @endpush
-</x-layouts.host-dashboard>

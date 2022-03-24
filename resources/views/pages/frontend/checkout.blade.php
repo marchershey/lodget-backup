@@ -53,7 +53,7 @@
                         <td class="pt-3 text-right font-medium">${{ number_format($pricing_total, 2) }}</td>
                     </tr>
                 </table>
-                <div x-data="{discount: false}">
+                <div x-data="{ discount: false }">
                     <hr class="mb-3">
                     <span x-on:click="discount = !discount" class="text-link">Enter discount code</span>
                     <div x-show="discount" x-cloak class="mt-3 rounded-lg bg-gray-100 p-3 text-center text-xs">

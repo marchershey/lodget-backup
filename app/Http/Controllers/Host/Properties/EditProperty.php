@@ -101,40 +101,38 @@ class EditProperty extends Component
      */
     public function load()
     {
-        if ($property = Property::find($this->property_id)) {
-
-            $this->property = $property;
+        if ($this->property = Property::find($this->property_id)) {
 
             // load property data
-            $this->name = $property->name;
-            $this->address_street = $property->address_street;
-            $this->address_city = $property->address_city;
-            $this->address_state = $property->address_state;
-            $this->address_zip = $property->address_zip;
-            $this->listing_headline = $property->listing_headline;
-            $this->listing_description = $property->listing_description;
-            $this->guest_count = (int) $property->guest_count;
-            $this->bedroom_count = (int) $property->bedroom_count;
-            $this->bed_count = (int) $property->bed_count;
-            $this->bathroom_count = (float) $property->bathroom_count;
-            $this->rate = $property->rate;
-            $this->tax_rate = $property->tax_rate;
-            $this->calendar_color = $property->calendar_color;
+            $this->name = $this->property->name;
+            $this->address_street = $this->property->address_street;
+            $this->address_city = $this->property->address_city;
+            $this->address_state = $this->property->address_state;
+            $this->address_zip = $this->property->address_zip;
+            $this->listing_headline = $this->property->listing_headline;
+            $this->listing_description = $this->property->listing_description;
+            $this->guest_count = (int) $this->property->guest_count;
+            $this->bedroom_count = (int) $this->property->bedroom_count;
+            $this->bed_count = (int) $this->property->bed_count;
+            $this->bathroom_count = (float) $this->property->bathroom_count;
+            $this->rate = $this->property->rate;
+            $this->tax_rate = $this->property->tax_rate;
+            $this->calendar_color = $this->property->calendar_color;
 
             // load fees
-            if ($fees = $property->fees()->get(['name', 'amount', 'type'])->toArray()) {
+            if ($fees = $this->property->fees()->get(['name', 'amount', 'type'])->toArray()) {
                 $this->fees = $fees;
             }
 
             // load amenities
-            if ($amenities = $property->amenities()->get(['id', 'text'])->toArray()) {
+            if ($amenities = $this->property->amenities()->get(['id', 'text'])->toArray()) {
                 foreach ($amenities as $amenity) {
                     $this->amenities[$amenity['id']] = $amenity['text'];
                 }
             }
 
             // load photos
-            if ($photos = $property->photos()->get(['id', 'name', 'size', 'path'])->toArray()) {
+            if ($photos = $this->property->photos()->get(['id', 'name', 'size', 'path'])->toArray()) {
                 $this->uploadedPhotos = $photos;
             }
         }
@@ -205,9 +203,6 @@ class EditProperty extends Component
     }
 
 
-
-
-
     public function submit()
     {
         // Validate
@@ -215,23 +210,22 @@ class EditProperty extends Component
 
         try {
             // Property Data
-            $property = Property::find($this->property_id);
-            $property->name = $this->name;
-            $property->address_street = $this->address_street;
-            $property->address_city = $this->address_city;
-            $property->address_state = $this->address_state;
-            $property->addresS_zip = $this->address_zip;
-            $property->listing_headline = $this->listing_headline;
-            $property->listing_description = $this->listing_description;
-            $property->guest_count = $this->guest_count;
-            $property->bedroom_count = $this->bedroom_count;
-            $property->bed_count = $this->bed_count;
-            $property->bathroom_count = $this->bathroom_count;
-            $property->rate = number_format($this->rate, 2);
-            $property->tax_rate = $this->tax_rate;
-            $property->calendar_color = $this->calendar_color;
-            $property->user_id = 1;
-            $property->save();
+            $this->property->name = $this->name;
+            $this->property->address_street = $this->address_street;
+            $this->property->address_city = $this->address_city;
+            $this->property->address_state = $this->address_state;
+            $this->property->address_zip = $this->address_zip;
+            $this->property->listing_headline = $this->listing_headline;
+            $this->property->listing_description = $this->listing_description;
+            $this->property->guest_count = $this->guest_count;
+            $this->property->bedroom_count = $this->bedroom_count;
+            $this->property->bed_count = $this->bed_count;
+            $this->property->bathroom_count = $this->bathroom_count;
+            $this->property->rate = number_format($this->rate, 2);
+            $this->property->tax_rate = $this->tax_rate;
+            $this->property->calendar_color = $this->calendar_color;
+            $this->property->user_id = 1;
+            $this->property->save();
 
             // Fees
             foreach ($this->property->fees as $fee) {
@@ -243,7 +237,7 @@ class EditProperty extends Component
                     $newFee->name = $fee['name'];
                     $newFee->amount = $fee['amount'];
                     $newFee->type = $fee['type'];
-                    $newFee->property_id = $property->id;
+                    $newFee->property_id = $this->property->id;
                     $newFee->user_id = 1;
                     $newFee->save();
                 }
@@ -257,7 +251,7 @@ class EditProperty extends Component
                 foreach ($this->amenities as $text) {
                     $amenity = new Amenity();
                     $amenity->text = $text;
-                    $amenity->property_id = $property->id;
+                    $amenity->property_id = $this->property->id;
                     $amenity->user_id = 1;
                     $amenity->save();
                 }
@@ -275,7 +269,7 @@ class EditProperty extends Component
 
                     // store photo in database
                     $photo = new Photo();
-                    $photo->property_id = $property->id;
+                    $photo->property_id = $this->property->id;
                     $photo->user_id = 1;
                     $photo->name = $stagedPhoto->getClientOriginalName();
                     $photo->size = $stagedPhoto->getSize();
@@ -286,7 +280,7 @@ class EditProperty extends Component
                 }
             }
 
-            toast()->success($this->property->name . " updated successfully!")->pushOnNextPage();
+            toast()->success($this->property->name . " updated successfully!")->push();
 
             // redirect back to properties list
             return redirect()->route('host.properties.index');

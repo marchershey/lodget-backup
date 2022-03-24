@@ -28,7 +28,7 @@ Route::name('frontend.')->prefix('/')->group(function () {
 Route::name('host.')->prefix('host')->group(function () {
     Route::view('/', 'pages.host.dashboard')->name('dashboard');
 
-    Route::view('/reservations', 'pages.host.reservations')->name('reservations');
+    Route::get('/reservations', \App\Http\Controllers\Host\ReservationsPage::class)->name('reservations');
 
     Route::name('properties.')->prefix('properties')->group(function () {
         // Route::view('/', 'pages.host.properties.list')->name('list');
