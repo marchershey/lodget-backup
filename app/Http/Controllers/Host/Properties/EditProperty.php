@@ -49,6 +49,7 @@ class EditProperty extends Component
 
     // options
     public $calendar_color = '#2C3E50';
+    public $min_nights = 1;
 
     protected $rules = [
         'name' => 'required|max:100',
@@ -71,6 +72,7 @@ class EditProperty extends Component
         'stagedPhotos' => '',
         'stagedPhotos.*' => 'image|max:5120',
         'calendar_color' => 'required|size:7',
+        'min_nights' => 'required|integer|min:1|max:7',
     ];
 
     public function render()
@@ -118,6 +120,7 @@ class EditProperty extends Component
             $this->rate = $this->property->rate;
             $this->tax_rate = $this->property->tax_rate;
             $this->calendar_color = $this->property->calendar_color;
+            $this->min_nights = $this->property->min_nights;
 
             // load fees
             if ($fees = $this->property->fees()->get(['name', 'amount', 'type'])->toArray()) {
@@ -224,6 +227,7 @@ class EditProperty extends Component
             $this->property->rate = number_format($this->rate, 2);
             $this->property->tax_rate = $this->tax_rate;
             $this->property->calendar_color = $this->calendar_color;
+            $this->property->min_nights = $this->min_nights;
             $this->property->user_id = 1;
             $this->property->save();
 

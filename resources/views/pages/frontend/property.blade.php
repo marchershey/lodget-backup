@@ -54,7 +54,7 @@
 
             {{-- Right column --}}
             <div>
-                <div class="panel z-10 flex flex-col" x-data="{showCalendar:@entangle('showCalendar'), showLoginForm:@entangle('showLoginForm'), showSignupForm:@entangle('showSignupForm')}">
+                <div class="panel z-10 flex flex-col" x-data="{ showCalendar: @entangle('showCalendar'), showLoginForm: @entangle('showLoginForm'), showSignupForm: @entangle('showSignupForm') }">
 
                     {{-- Calendar --}}
                     <div wire:ignore x-show="showCalendar" x-cloak class="space-y-5">
@@ -81,7 +81,7 @@
                                 <polyline points="11 12 12 12 12 16 13 16"></polyline>
                             </svg>
                             <span>
-                                Please note: there is a 3 night minimum
+                                Please note: there is a {{ $property->min_nights ?? 0 }} night minimum
                             </span>
                         </div>
                     </div>
@@ -139,20 +139,21 @@
                         @else
                             <div>
                                 <form wire:submit.prevent="{{ $authType }}" class="space-y-3" autocomplete="off">
-                                    <div class="text-center text-lg font-semibold">Sign in to reserve your dates</div>
+                                    {{-- <div class="text-center text-lg font-semibold"> to reserve your dates</div> --}}
                                     <x-forms.text wireId="email" label="Email address" />
                                     <div x-show="showLoginForm" x-cloak>
-                                        <x-forms.text wireId="password" inputType="password" label="Password" />
+                                        <x-forms.text wireId="password_login" inputType="password" label="Password" />
                                     </div>
                                     <div x-show="showSignupForm" x-cloak class="space-y-3">
                                         <x-forms.text wireId="name" label="Full name" inputClass="capitalize" />
-                                        <x-forms.text wireId="password" inputType="password" label="Password" />
-                                        <x-forms.text wireId="password_confirmation" inputType="password" label="Confirm Password" />
+                                        <x-forms.text wireId="password_register" inputType="password" label="Password" />
+                                        <x-forms.text wireId="password_register_confirmation" inputType="password" label="Confirm Password" />
                                         <x-forms.text wireId="phone" label="Phone Number" inputClass="phone" />
                                         <x-forms.text wireId="birthdate" label="Birthdate" inputClass="date" />
                                     </div>
 
                                     <button type="submit" class="button button-primary w-full">Continue</button>
+                                    <button wire:click="clearDates" type="button" class="button button-link w-full">Change Dates</button>
                                 </form>
                             </div>
                         @endauth
@@ -197,27 +198,24 @@
 @push('scripts')
     {{-- Calendar --}}
     <script>
-        window.addEventListener('calendarLoad', event => {
+        window.addEventListener('calendarInit', event => {
             window.calendar = new Litepicker({
                 element: document.getElementById('dates'),
                 parentEl: document.getElementById('calendar'),
                 zIndex: 1,
                 singleMode: false,
                 inlineMode: true,
-                minDays: 4,
-                minDate: new Date(),
+                minDays: 1, // number of nights + 1
+                minDate: new Date() - 1,
+                disallowLockDaysInRange: true,
                 tooltipText: {
                     one: 'night',
                     other: 'nights'
                 },
-                disallowLockDaysInRange: true,
-                lockDays: [
-                    ['2022-03-17', '2022-03-22']
-                ],
                 tooltipNumber: (totalDays) => {
                     return totalDays - 1; // -1 to indicate nights (eg. 2 days selected = 1 night)
                 },
-                // setup runs whent eh calendar is initiated 
+                // setup runs when the calendar is initiated 
                 setup: (picker) => {
                     // on.selected runs when 2 dates are selected
                     picker.on('selected', (date1, date2) => {
@@ -233,6 +231,18 @@
                 },
 
             });
+        })
+
+        window.addEventListener('calendarUpdateMinNights', event => {
+            min_nights = event.detail.min_nights;
+            calendar.setOptions({
+                minDays: min_nights + 1
+            })
+        })
+
+        window.addEventListener('calendarLockDays', event => {
+            dateRangesToLock = event.detail.dateRangesToLock;
+            calendar.setLockDays(dateRangesToLock);
         })
     </script>
 

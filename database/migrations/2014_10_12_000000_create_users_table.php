@@ -26,7 +26,9 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->string('stripe_id')->nullable()->index();
-            $table->string('stripe_pm')->nullable();
+            $table->string('pm_type')->nullable();
+            $table->string('pm_last_four')->nullable();
+            // $table->string('stripe_pm')->nullable();
             $table->boolean('is_host')->default(false);
             $table->rememberToken();
             $table->timestamps();

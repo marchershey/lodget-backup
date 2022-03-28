@@ -12,8 +12,8 @@
             <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
         @else
             @if (isset($description))
-                <p class="mt-2 text-sm text-muted" id="{{ $wireId }}-description">{{ $description }}</p>
+                <p class="text-muted mt-2 text-sm" id="{{ $wireId }}-description">{{ $description }}</p>
             @endif
-            @endif
-        </label>
-    </div>
+        @enderror
+    </label>
+</div>

@@ -210,7 +210,6 @@
                             </div>
                         </div>
                     </div>
-
                     @if ($stagedPhotos)
                         <div class="space-y-5 rounded-lg bg-gray-100 p-5">
                             <div class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-4">
@@ -227,13 +226,13 @@
                     @endif
 
                     @if ($uploadedPhotos)
-                        <div class="draggable -mx-2.5 my-2.5 focus-visible:outline-none grid-smaller">
+                        <div class="draggable grid-smaller -mx-2.5 my-2.5 focus-visible:outline-none">
                             @foreach ($uploadedPhotos as $key => $photo)
-                                <div class="draggable--item relative bg-white p-2.5 rounded-lg focus-visible:outline-none" data-photo-id="{{ $photo['id'] }}">
+                                <div class="draggable--item relative rounded-lg bg-white p-2.5 focus-visible:outline-none" data-photo-id="{{ $photo['id'] }}">
                                     <div class="group aspect-w-10 aspect-h-7 draggable--handle block w-full overflow-hidden rounded-lg bg-gray-100">
                                         <img src="/storage/{{ $photo['path'] }}" alt="" class="pointer-events-none object-cover group-hover:opacity-75">
                                     </div>
-                                    <div x-data="{open:false}" class="flex items-center justify-between">
+                                    <div x-data="{ open: false }" class="flex items-center justify-between">
                                         <div class="pointer-events-none mt-2 truncate font-medium">
                                             <p class="block truncate text-sm">{{ $photo['name'] }}</p>
                                             <p class="text-muted block text-xs">{{ number_format($photo['size'] / 1e6, 2) }}MB</p>
@@ -287,7 +286,7 @@
             </div>
         </div>
 
-        {{-- Amenities --}}
+        {{-- Options --}}
         <div class="section xl:grid xl:grid-cols-3 xl:gap-5">
             <div>
                 <x-heading>
@@ -298,15 +297,18 @@
                 </p>
             </div>
             <div class="col-span-2">
-                <div class="panel" wire:loading.class="opacity-50" wire:target="submit">
+                <div class="panel space-y-10" wire:loading.class="opacity-50" wire:target="submit">
                     <x-forms.color wireId="calendar_color" label="Calendar Color" description="The background color each reservation will have when assigned to this property. Note: The text color is white, so be sure to pick a darker color" />
+                    <div>
+                        <x-forms.number wireId="min_nights" class="col-span-2 xl:col-span-3 xl:col-start-1" label="Minimum Nights" min="1" max="16" description="The minimum number of nights you require a guest to stay" />
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="flex justify-end xl:justify-between" x-data="{ready: @entangle('ready')}">
-            <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-red-link' : 'button-gray-link'" class="button">Delete Property</button>
-            <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-blue' : 'button-gray'" class="button">Update Property</button>
+        <div class="flex justify-end xl:justify-between" x-data="{ ready: @entangle('ready') }">
+            <button type="button" wire:click="submit" id="submit" :class="ready ?'button-red-link' : 'button-gray-link'" class="button">Delete Property</button>
+            <button type="button" wire:click="submit" id="submit" :class="ready ?'button-blue' : 'button-gray'" class="button">Update Property</button>
         </div>
     </div>
 

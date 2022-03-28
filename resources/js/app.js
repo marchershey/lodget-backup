@@ -75,9 +75,18 @@ window.addEventListener("maskAllElements", (event) => {
 
 /**
  * Calendar
- * FullCalendar.io - v5
- * https://fullcalendar.io/
  */
+
+// Litepicker - mini calendar
+import Litepicker from "litepicker";
+import "litepicker/dist/plugins/mobilefriendly";
+
+// Flatpickr - mini calendar
+import flatpickr from "flatpickr";
+window.flatpickr = flatpickr;
+
+// FullCalendar.io (v5) - big calendar
+// https://fullcalendar.io/
 import { Calendar } from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -125,7 +134,3 @@ window.Swiper = Swiper;
 import Splide from "@splidejs/splide";
 import splideCss from "@splidejs/splide/dist/css/themes/splide-default.min.css";
 window.Splide = Splide;
-
-// calendar - lightpicker
-import Litepicker from "litepicker";
-import "litepicker/dist/plugins/mobilefriendly";

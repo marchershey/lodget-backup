@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('rate');
             $table->string('tax_rate');
             $table->string('calendar_color');
+            $table->integer('min_nights');
             $table->integer('user_id');
             $table->boolean('active')->default(true);
             $table->timestamps();

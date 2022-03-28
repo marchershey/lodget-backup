@@ -4,13 +4,13 @@
     min: {{ $min }},
     max: {{ $max }},
     add() { this.value = (this.addDisabled) ? (this.value + this.step) : this.value },
-    subtract()  { this.value = (this.subtractDisabled) ? (this.value - this.step) : this.value },
+    subtract() { this.value = (this.subtractDisabled) ? (this.value - this.step) : this.value },
     addDisabled() { return this.value >= this.max },
     subtractDisabled() { return this.value <= this.min }
 }">
     <label for="{{ $wireId }}">
         <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
-        <div class="focus-within:ring-primary focus-within:border-primary @error($wireId) border-red-500 @enderror mt-1 flex w-full overflow-hidden rounded-md border border-gray-300 focus-within:ring-1 sm:text-sm">
+        <div class="focus-within:ring-primary focus-within:border-primary @error($wireId) border-red-500 @enderror mt-1 flex w-full max-w-[200px] overflow-hidden rounded-md border border-gray-300 focus-within:ring-1 sm:text-sm">
             <button x-on:click="subtract()" x-bind:disabled="subtractDisabled" class="mr-px border-r border-gray-300 bg-gray-100 px-3 text-gray-600 focus-within:ring-1 focus:ring-0 focus-visible:border-blue-600 focus-visible:bg-blue-600 focus-visible:text-white focus-visible:outline-none focus-visible:ring-blue-600 active:bg-blue-600 active:text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon h-5 w-5" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -26,5 +26,13 @@
                 </svg>
             </button>
         </div>
+        @error($wireId)
+            <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+        @else
+            @if (isset($description))
+                <p class="text-muted mt-2 text-sm" id="{{ $wireId }}-description">{{ $description }}</p>
+            @endif
+        @enderror
+
     </label>
 </div>

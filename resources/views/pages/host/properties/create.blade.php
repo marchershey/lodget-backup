@@ -210,7 +210,6 @@
                             </div>
                         </div>
                     </div>
-
                     @if ($stagedPhotos)
                         <div class="text-muted text-xs">
                             <strong>Note:</strong> Click/Tap a photo to remove it
@@ -234,7 +233,7 @@
             </div>
         </div>
 
-        {{-- Amenities --}}
+        {{-- Options --}}
         <div class="section xl:grid xl:grid-cols-3 xl:gap-5">
             <div>
                 <x-heading>
@@ -245,14 +244,17 @@
                 </p>
             </div>
             <div class="col-span-2">
-                <div class="panel" wire:loading.class="opacity-50" wire:target="submit">
+                <div class="panel space-y-10" wire:loading.class="opacity-50" wire:target="submit">
                     <x-forms.color wireId="calendar_color" label="Calendar Color" description="The background color each reservation will have when assigned to this property. Note: The text color is white, so be sure to pick a darker color" />
+                    <div>
+                        <x-forms.number wireId="min_nights" class="col-span-2 xl:col-span-3 xl:col-start-1" label="Minimum Nights" min="1" max="16" description="The minimum number of nights you require a guest to stay" />
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="flex justify-end" x-data="{ready: @entangle('ready')}">
-            <button type="button" wire:click="submit" id="submit" :class="ready ? 'button-blue' : 'button-gray'" class="button">Save Property</button>
+        <div class="flex justify-end" x-data="{ ready: @entangle('ready') }">
+            <button type="button" wire:click="submit" id="submit" :class="ready ?'button-blue' : 'button-gray'" class="button">Save Property</button>
         </div>
     </div>
 

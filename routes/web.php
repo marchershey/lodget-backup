@@ -20,7 +20,7 @@ Route::name('frontend.')->prefix('/')->group(function () {
     Route::get('/property/{property_id}', App\Http\Controllers\Frontend\PropertyPage::class)->name('property');
     Route::get('/checkout/{slug}', App\Http\Controllers\Frontend\CheckoutPage::class)->name('checkout');
 
-    // Route::view('/success', 'pages.frontend.success');
+    Route::get('/success/{slug}', App\Http\Controllers\Frontend\Success::class)->name('success');
 });
 
 

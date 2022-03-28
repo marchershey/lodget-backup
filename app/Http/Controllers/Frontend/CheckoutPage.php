@@ -6,10 +6,15 @@ use App\Helpers\Currency;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class CheckoutPage extends Component
 {
+    // Page states
+    public $success = false;
+    public $loading = false;
+
     // Reservation data
     public $reservation_slug;
     public $reservation;
@@ -28,12 +33,11 @@ class CheckoutPage extends Component
     // Pricing details
     public $pricing_base;
     public $pricing_fees;
+    public $pricing_tax;
     public $pricing_total;
 
-    // Payment details
-    public $name;
-    public $email;
-    public $phone;
+    // User & Payment details
+    public $user;
     public $address;
     public $unit;
     public $city;
@@ -69,9 +73,18 @@ class CheckoutPage extends Component
         $this->photo = $this->property->photos()->first();
         $this->fees = $this->property->fees()->get();
 
-        // $this->property = Property::find($this->property_id);
-        // $this->photo = $this->property->photo()->first();
-        // $this->fees = $this->property->fees()->get();
+        $this->checkin_date = Carbon::parse($this->reservation->checkin_date)->format('D, M jS');
+        $this->checkout_date = Carbon::parse($this->reservation->checkout_date)->format('D, M jS');
+        $this->nights = $this->reservation->nights;
+
+        // Load User & Payment Details
+        $this->user = auth()->user();
+        $this->address = $this->user->address;
+
+        $this->unit = $this->user->unit;
+        $this->city = $this->user->city;
+        $this->state = $this->user->state;
+        $this->zip = $this->user->zip;
 
         // Stripe setup
         $this->setupStripe();
@@ -86,14 +99,14 @@ class CheckoutPage extends Component
     public function setupStripe()
     {
         // Create Stripe Customer
-        $this->stripe_customer = auth()->user()->createOrGetStripeCustomer([
+        $this->stripe_customer = $this->user->createOrGetStripeCustomer([
             'metadata' => [
-                'birthdate' => auth()->user()->birthdate,
+                'birthdate' => $this->user->birthdate,
             ]
         ]);
 
         // Setup Payment intent
-        $this->stripe_intent = auth()->user()->createSetupIntent([
+        $this->stripe_intent = $this->user->createSetupIntent([
             'customer' => $this->stripe_customer->id,
             'payment_method_types' => ['card'],
             // 'setup_future_usage' => 'off_session',
@@ -115,30 +128,55 @@ class CheckoutPage extends Component
         $this->pricing_total = $this->pricing_base;
 
         // Calculate fees
-        if ($this->fees) {
-            foreach ($this->fees as $fee) {
-                if ($fee['type'] == "fixed") {
-                    // $fee is a fixed type
-                    $name = (string) $fee['name'];
-                    $amount = (float) $fee['amount'];
-                } elseif ($fee['type'] == "percentage") {
-                    // $fee is a 'percentage' type
-                    $name = (string) $fee['name'];
-                    $amount = (float) ($fee['amount'] * 0.01) * $this->pricing_base;
-                    // $amount on a percentage type is calculated 
-                }
-
-                // Add fee to an array with calculated total
-                // This helps display the correct amount on percentage types
-                $this->pricing_fees[] = [
-                    'name' => $name,
-                    'amount' => $amount,
-                ];
-
-                // Add fee to total
-                $this->pricing_total = $this->pricing_total + $amount;
+        foreach ($this->fees as $fee) {
+            if ($fee['type'] == "fixed") {
+                // $fee is a fixed type
+                $name = (string) $fee['name'];
+                $amount = (int) $fee['amount'];
+            } elseif ($fee['type'] == "percentage") {
+                // $fee is a 'percentage' type
+                $name = (string) $fee['name'];
+                $amount = (float) ($fee['amount'] * 0.01) * $this->pricing_base;
+                // $amount on a percentage type is calculated 
             }
+
+            // Add fee to an array with calculated total
+            // This helps display the correct amount on percentage types
+            $this->pricing_fees[] = [
+                'name' => $name,
+                'amount' => $amount,
+            ];
+
+            // Add fee to total
+            $this->pricing_total = $this->pricing_total + $amount;
         }
+
+        // Calculate taxes
+        if ($this->property->tax_rate) {
+            // convert tax_rate to a percentage
+            $tax_percentage = $this->property->tax_rate * 0.01;
+
+            // calculate price of taxes on total
+            $this->pricing_tax = $this->pricing_total * $tax_percentage;
+
+            // add tax to total
+            $this->pricing_total = $this->pricing_total + $this->pricing_tax;
+        }
+    }
+
+    /**
+     * When a guest clicks "change" button to change reservation dates,
+     * we need to delete this reservation, and redirect the guest back
+     * to the property page to restart. 
+     * 
+     * This needs to be improved. Allow the guest to change on the checkout
+     * page.
+     */
+    public function cancel()
+    {
+        $this->reservation->delete();
+
+        return redirect('/property/' . $this->property->id);
     }
 
     public function submit()
@@ -146,16 +184,15 @@ class CheckoutPage extends Component
         $this->validate();
 
         // Save user data
-        $user = User::find(auth()->user()->id);
-        $user->address = $this->address;
-        $user->unit = $this->unit;
-        $user->city = $this->city;
-        $user->state = $this->state;
-        $user->zip = $this->zip;
-        $user->save();
+        $this->user->address = $this->address;
+        $this->user->unit = $this->unit;
+        $this->user->city = $this->city;
+        $this->user->state = $this->state;
+        $this->user->zip = $this->zip;
+        $this->user->save();
 
         // Update Stripe data
-        $user->updateStripeCustomer([
+        $this->user->updateStripeCustomer([
             'address' => [
                 'city' => $this->city,
                 'country' => 'US',
@@ -172,16 +209,14 @@ class CheckoutPage extends Component
     public function finalize($setupIntent)
     {
         // Update user's default payment method
-        $user = User::find(auth()->user()->id);
-        $user->stripe_pm = $setupIntent['payment_method'];
-        $user->save();
+        $this->user->updateDefaultPaymentMethod($setupIntent['payment_method']);
 
-        dd($setupIntent);
+        return redirect('/success/' . $this->reservation->slug);
 
-        // Update reservation
-        // dd($user->charge(Currency::toPennies($this->pricing_total), $setupIntent['payment_method'], [
+        // dd($this->user->charge(Currency::toPennies($this->pricing_total), $this->user->defaultPaymentMethod()->id, [
         //     'off_session' => true,
         //     'confirm' => true,
+        //     'capture_method' => 'manual',
         // ]));
     }
 }

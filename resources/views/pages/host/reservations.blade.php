@@ -31,33 +31,91 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Odd row -->
-                        <tr>
-                            <td><span class="text-link">John Smith</span></td>
-                            <td><span class="text-link">Ohana Burnside</span></td>
-                            <td>
-                                <div class="flex space-x-1">
-                                    <span class="text-bold">Aug 24th</span>
-                                    <span>to</span>
-                                    <span class="text-bold">Aug 25th</span>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-green">Approved</span></td>
-                            <td><span class="text-link">View</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-link">John Smith</span></td>
-                            <td><span class="text-link">Ohana Burnside</span></td>
-                            <td>
-                                <div class="flex space-x-1">
-                                    <span class="text-bold">Aug 24th</span>
-                                    <span>to</span>
-                                    <span class="text-bold">Aug 25th</span>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-green">Approved</span></td>
-                            <td><span class="text-link">View</span></td>
-                        </tr>
+                        @if ($reservations)
+
+                            {{-- Pending Reservations --}}
+                            <tr>
+                                <th colspan="5" class="border-b !bg-gray-100">
+                                    <span>Pending Reservations</span>
+                                </th>
+                            </tr>
+                            @foreach ($reservations->where('status', 'pending') as $reservation)
+                                <tr class="border-b border-gray-200 !bg-yellow-50">
+                                    <td><span class="text-link">{{ $reservation->user->name }}</span></td>
+                                    <td><a href="/host/properties/edit/{{ $reservation->property->id }}" class="text-link">{{ $reservation->property->name }}</span></td>
+                                    <td>
+                                        <div class="flex space-x-1">
+                                            <span class="text-bold">{{ \Carbon\Carbon::parse($reservation->checkin_date)->format('M jS') }}</span>
+                                            <span>to</span>
+                                            <span class="text-bold">{{ \Carbon\Carbon::parse($reservation->checkout_date)->format('M jS') }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-yellow">Pending</span>
+                                    </td>
+                                    <td class="w-[250px]">
+                                        <div class="flex justify-end space-x-5" wire:loading.remove wire:target="approveReservation({{ $reservation->id }})">
+                                            <span class="text-link" wire:click="approveReservation({{ $reservation->id }})">Approve</span>
+                                            <span class="text-link">Reject</span>
+                                            <span class="text-link">View</span>
+                                        </div>
+                                        <div class="" wire:loading wire:target="approveReservation({{ $reservation->id }})"> <svg class="h-4 w-4 animate-spin text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                            {{-- Not Pending Reservations --}}
+                            <tr>
+                                <th colspan="5" class="border-b !bg-gray-100">
+                                    <span>Other Reservations</span>
+                                </th>
+                            </tr>
+                            @foreach ($reservations->where('status', '!=', 'pending') as $reservation)
+                                <tr class="border-b border-gray-200">
+                                    <td><span class="text-link">{{ $reservation->user->name }}</span></td>
+                                    <td><span class="text-link">{{ $reservation->property->name }}</span></td>
+                                    <td>
+                                        <div class="flex space-x-1">
+                                            <span class="text-bold">{{ \Carbon\Carbon::parse($reservation->checkin_date)->format('M jS') }}</span>
+                                            <span>to</span>
+                                            <span class="text-bold">{{ \Carbon\Carbon::parse($reservation->checkout_date)->format('M jS') }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if ($reservation->status == 'approved')
+                                            <span class="badge badge-green">Approved</span>
+                                        @elseif($reservation->status == 'completed')
+                                            <span class="badge badge-blue">Completed</span>
+                                        @elseif($reservation->status == 'cancelled')
+                                            <span class="badge badge-gray">Cancelled</span>
+                                        @endif
+
+                                    </td>
+                                    <td class="flex justify-end space-x-7">
+                                        <span class="text-link">View</span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr class="animate-pulse">
+                                <td>
+                                    <div class="h-5 w-[100px] rounded bg-gray-200">
+                                </td>
+                                <td>
+                                    <div class="h-5 w-[100px] rounded bg-gray-200">
+                                </td>
+                                <td>
+                                    <div class="h-5 w-[100px] rounded bg-gray-200">
+                                </td>
+                                <td>
+                                    <div class="h-5 w-[75px] rounded bg-gray-200">
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -68,41 +126,8 @@
         <script>
             window.onload = function() {
                 let calendarEl = document.getElementById('calendar-container')
-                let calendarEvents = {
-                    resourceAreaHeaderContent: 'Properties',
-                    resources: [ //
-                        {
-                            id: 'ohana-burnside',
-                            title: 'Ohana Burnside',
-                            eventColor: "#2d3748"
-                        },
-                        {
-                            id: 'property 2',
-                            title: 'property 2',
-                            eventColor: "#2d3748"
-                        }
-                    ],
-                    events: [ //
-                        {
-                            id: '3',
-                            start: '2022-02-28T16:00:00',
-                            end: '2022-02-29T11:00:00',
-                            title: 'Ohana Burnside: Marc Hershey',
-                            url: '/reservations/1',
-                            resourceId: 'ohana-burnside',
-                        },
-                        {
-                            id: '4',
-                            start: '2022-02-14T16:00:00',
-                            end: '2022-02-16T11:00:00',
-                            title: 'Marc Hershey 2',
-                            url: '/reservations/2',
-                        },
-                    ],
-                }
                 window.calendar = new Calendar(calendarEl, {
                     ...defaultCalendarOptions,
-                    ...calendarEvents
                 });
 
                 calendar.render();
@@ -112,12 +137,12 @@
                 var reservations = event.detail.reservations
 
                 reservations.forEach(reservation => {
-                    console.log(reservation);
                     calendar.addEvent({
-                        title: reservation.property_name + ': ' + reservation.guest_name,
-                        start: reservation.checkin_date,
-                        end: reservation.checkout_date,
+                        title: reservation.title,
+                        start: reservation.start,
+                        end: reservation.end,
                         color: reservation.color,
+                        url: reservation.url,
                         allDay: true
                     });
                 });

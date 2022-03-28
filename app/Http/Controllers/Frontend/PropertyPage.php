@@ -6,6 +6,7 @@ use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -36,8 +37,9 @@ class PropertyPage extends Component
     public $user;
     public $name;
     public $email;
-    public $password;
-    public $password_confirmation;
+    public $password_login;
+    public $password_register;
+    public $password_register_confirmation;
     public $phone;
     public $birthdate;
 
@@ -46,6 +48,9 @@ class PropertyPage extends Component
     public $showCalendar = true;
     public $showLoginForm = false;
     public $showSignupForm = false;
+
+    // Calendar data
+    // public $disabled_date_ranges = []; // for existing reservations
 
     protected $rules = [
         'email' => 'required|email|max:250',
@@ -79,24 +84,30 @@ class PropertyPage extends Component
             $this->user = auth()->user();
         }
 
+
         // load slider
         $this->dispatchBrowserEvent('sliderLoad');
 
-        // load calendar
-        $this->dispatchBrowserEvent('calendarLoad');
+        // load calendar and lock days for existing reservationsd
+        $this->loadCalendar();
+        // $this->dispatchBrowserEvent('calendarLockDays', ['reservations' => Reservation::all('checkin_date', 'checkout_date')]);
     }
 
-    // public function clearDates()
-    // {
-    //     $this->checkin = null;
-    //     $this->checkout = null;
-    //     $this->nights = 0;
-    //     $this->basePrice = 0;
-    //     $this->cleaningFee = 0;
-    //     $this->fees = [];
-    //     $this->dispatchBrowserEvent('showcalendar');
-    //     $this->dispatchBrowserEvent('clearcalendardates');
-    // }
+    public function loadCalendar()
+    {
+        // init the calendar
+        $this->dispatchBrowserEvent('calendarInit');
+
+        // update min nights
+        $this->dispatchBrowserEvent('calendarUpdateMinNights', ['min_nights' => $this->property->min_nights]);
+
+        // lock existing reservation days
+        $dateRangesToLock = Reservation::all('checkin_date', 'checkout_date')->map(function ($reservation) {
+            return collect($reservation)->flatten()->toArray();
+        })->toArray();
+        $this->dispatchBrowserEvent('calendarLockDays', ['dateRangesToLock' => $dateRangesToLock]);
+        # code...
+    }
 
     /**
      * This is just a notification action. If a user presses the "check avail" button
@@ -129,9 +140,20 @@ class PropertyPage extends Component
     // NEEDS IMPLEMENTATION & DOCUMENTATION
     public function clearDates()
     {
+        // clear dates
         $this->checkin_date = null;
         $this->checkout_date = null;
+
+        // clear number of nights
         $this->nights = null;
+
+        // clear pricing
+        $this->pricing_base = null;
+        $this->pricing_fees = [];
+        $this->pricing_tax = null;
+        $this->pricing_total = null;
+
+        // bring the calendar back
         $this->showCalendar = true;
     }
 
@@ -212,11 +234,11 @@ class PropertyPage extends Component
         // validate user data
         $this->validate([
             'email' => 'required|email|max:250',
-            'password' => 'required|min:6|max:250',
+            'password_login' => 'required|min:6|max:250',
         ]);
 
         // try to authenticate user
-        if ($this->user = auth()->attempt(['email' => $this->email, 'password' => $this->password])) {
+        if ($this->user = auth()->attempt(['email' => $this->email, 'password' => $this->password_login])) {
             $this->user = auth()->user();
             toast()->debug('Welcome back, ' . auth()->user()->firstName() . '!')->pushOnNextPage();
             $this->submit();
@@ -230,7 +252,7 @@ class PropertyPage extends Component
         // validate user data
         $this->validate([
             'email' => 'required|email|max:250',
-            'password' => 'required|min:6|max:250|confirmed',
+            'password_register' => 'required|min:6|max:250|confirmed',
             'name' => 'required|max:250',
             'phone' => 'required',
             'birthdate' => 'required|date_format:m/d/Y|before:-18 years',
@@ -240,13 +262,13 @@ class PropertyPage extends Component
         $this->user = User::create([
             'name' => ucwords($this->name),
             'email' => $this->email,
-            'password' => Hash::make($this->password),
+            'password' => Hash::make($this->password_register),
             'phone' => $this->phone,
             'birthdate' => Carbon::parse($this->birthdate)->toDateString(),
         ]);
 
         // login user
-        auth()->attempt(['email' => $this->email, 'password' => $this->password]);
+        auth()->attempt(['email' => $this->email, 'password' => $this->password_register]);
 
         // submit the form
         toast()->debug('Thanks for joining, ' . auth()->user()->firstName() . '!')->pushOnNextPage();

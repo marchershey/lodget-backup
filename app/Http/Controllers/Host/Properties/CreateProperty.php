@@ -46,6 +46,7 @@ class CreateProperty extends Component
 
     // options
     public $calendar_color = '#2C3E50';
+    public $min_nights = 3;
 
     protected $rules = [
         'name' => 'required|max:100',
@@ -68,6 +69,7 @@ class CreateProperty extends Component
         'stagedPhotos' => 'required',
         'stagedPhotos.*' => 'image|max:12288', // not needed i guess? 
         'calendar_color' => 'required|size:7',
+        'min_nights' => 'required|integer|min:1|max:7',
     ];
 
     public function render()
@@ -204,6 +206,7 @@ class CreateProperty extends Component
         $property->rate = number_format($this->rate, 2);
         $property->tax_rate = $this->tax_rate;
         $property->calendar_color = $this->calendar_color;
+        $property->min_nights = $this->min_nights;
         $property->user_id = 1;
         $property->save();
 

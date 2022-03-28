@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Host;
 
+use App\Models\Property;
 use App\Models\Reservation;
 use Livewire\Component;
+use Usernotnull\Toast\Concerns\WireToast;
 
 class ReservationsPage extends Component
 {
+    use WireToast;
+
+    public $properties;
     public $reservations;
 
     public function render()
@@ -16,26 +21,35 @@ class ReservationsPage extends Component
 
     public function load()
     {
-        $this->reservations = Reservation::all();
-        // dd($this->reservations);
+        $this->reservations = Reservation::where('status', '!=', null)->get()->sortByDesc('checkin_date');
+        $this->properties = Property::all();
 
-        $this->loadCalendar();
+        $this->loadCalendarData();
     }
 
-    public function loadCalendar()
+    public function loadCalendarData()
     {
-        $data = [];
-
+        // Add reservations as events to calendar
+        $reservations = [];
         foreach ($this->reservations as $reservation) {
-            $data[] = [
-                'checkin_date' => $reservation->checkin_date,
-                'checkout_date' => $reservation->checkout_date,
-                'property_name' => $reservation->property->name,
-                'guest_name' => $reservation->user->name,
+
+            // add PENDING to title if reservation is pending
+            $title = ($reservation->status == 'pending') ? '*** ' . $reservation->property->name . ': ' . $reservation->user->name : $reservation->property->name . ': ' . $reservation->user->name;
+
+            $reservations[] = [
+                'status' => $reservation->status,
+                'title' => $title,
+                'start' => $reservation->checkin_date,
+                'end' => $reservation->checkout_date,
                 'color' => $reservation->property->calendar_color,
+                'url' => '/host/reservation/' . $reservation->id,
             ];
         }
+        $this->dispatchBrowserEvent('add-reservations-to-calendar', ['reservations' => $reservations]);
+    }
 
-        $this->dispatchBrowserEvent('add-reservations-to-calendar', ['reservations' => $data]);
+    public function approveReservation(Reservation $reservation)
+    {
+        toast()->success($reservation->user->name . ' has been approved to stay at ' . $reservation->property->name)->push();
     }
 }
