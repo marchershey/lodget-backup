@@ -11,7 +11,7 @@ class Success extends Component
 
     public function render()
     {
-        return view('pages.frontend.success');
+        return view('pages.frontend.success')->layout('layouts.minimal');
     }
 
     public function mount($slug)

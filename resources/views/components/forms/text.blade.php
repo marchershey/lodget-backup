@@ -2,14 +2,14 @@
     <label for="{{ $wireId }}" class="block">
         <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
         <div class="mt-1">
-            <div class="flex items-baseline w-full border border-gray-300 px-3 py-1.5 rounded focus-within:ring-1 focus-within:ring-primary focus-within:border-primary sm:text-sm @error($wireId) border-red-500 @enderror">
+            <div class="focus-within:ring-primary focus-within:border-primary @error($wireId) border-red-500 @enderror flex w-full items-baseline rounded border border-gray-300 px-3 py-1.5 focus-within:ring-1 sm:text-sm">
                 @if (isset($before))
                     <div {{ $before->attributes->class(['mr-2 flex items-baseline self-center']) }}>
                         {{ $before ?? null }}
                     </div>
                 @endif
                 <div class="w-full">
-                    <input wire:model.debounce.500ms="{{ $wireId }}" wire:loading.class="opacity-20" wire:loading.attr="readonly" wire:target="{{ $wireTarget }}" type="{{ $inputType }}" name="{{ $wireId }}" id="{{ $wireId }}" class="w-full p-0 border-none focus:ring-0 placeholder-muted-lighter {{ $inputClass }}" placeholder="{{ $placeholder }}" aria-describedby="{{ $wireId }}-description" value="{{ old($wireId) }}">
+                    <input wire:model.debounce.500ms="{{ $wireId }}" wire:loading.class="opacity-20" wire:loading.attr="readonly" wire:target="{{ $wireTarget }}" type="{{ $inputType }}" name="{{ $wireId }}" id="{{ $wireId }}" class="placeholder-muted-lighter {{ $inputClass }} w-full border-none p-0 focus:ring-0" placeholder="{{ $placeholder }}" aria-describedby="{{ $wireId }}-description" value="{{ old($wireId) }}">
                 </div>
                 @if (isset($after))
                     <div {{ $after->attributes->class(['ml-2 flex items-baseline self-center']) }}>

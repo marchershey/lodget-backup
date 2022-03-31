@@ -7,14 +7,13 @@ use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use Carbon\Carbon;
+use Laravel\Cashier\Exceptions\IncompletePayment;
 use Livewire\Component;
+use Stripe\Exception\CardException;
+use Throwable;
 
 class CheckoutPage extends Component
 {
-    // Page states
-    public $success = false;
-    public $loading = false;
-
     // Reservation data
     public $reservation_slug;
     public $reservation;
@@ -79,8 +78,10 @@ class CheckoutPage extends Component
 
         // Load User & Payment Details
         $this->user = auth()->user();
+        $this->name = $this->user->name;
+        $this->email = $this->user->email;
+        $this->phone = $this->user->phone;
         $this->address = $this->user->address;
-
         $this->unit = $this->user->unit;
         $this->city = $this->user->city;
         $this->state = $this->user->state;
@@ -105,10 +106,11 @@ class CheckoutPage extends Component
             ]
         ]);
 
-        // Setup Payment intent
+        // Create Setup intent
         $this->stripe_intent = $this->user->createSetupIntent([
             'customer' => $this->stripe_customer->id,
             'payment_method_types' => ['card'],
+            // 'capture_method' => 'manual',
             // 'setup_future_usage' => 'off_session',
         ]);
 
@@ -179,10 +181,17 @@ class CheckoutPage extends Component
         return redirect('/property/' . $this->property->id);
     }
 
-    public function submit()
+    /**
+     * Just validates the data..
+     */
+    public function validateUserData()
     {
         $this->validate();
+        return true;
+    }
 
+    public function finalize($setupIntent)
+    {
         // Save user data
         $this->user->address = $this->address;
         $this->user->unit = $this->unit;
@@ -191,7 +200,7 @@ class CheckoutPage extends Component
         $this->user->zip = $this->zip;
         $this->user->save();
 
-        // Update Stripe data
+        // Update User's Stripe data
         $this->user->updateStripeCustomer([
             'address' => [
                 'city' => $this->city,
@@ -203,20 +212,96 @@ class CheckoutPage extends Component
             ]
         ]);
 
-        $this->dispatchBrowserEvent('submitStripe');
-    }
-
-    public function finalize($setupIntent)
-    {
         // Update user's default payment method
         $this->user->updateDefaultPaymentMethod($setupIntent['payment_method']);
 
-        return redirect('/success/' . $this->reservation->slug);
+        // Create payment hold
 
-        // dd($this->user->charge(Currency::toPennies($this->pricing_total), $this->user->defaultPaymentMethod()->id, [
-        //     'off_session' => true,
-        //     'confirm' => true,
-        //     'capture_method' => 'manual',
-        // ]));
+
+        // try {
+        //     $this->user->charge(Currency::toPennies($this->pricing_total), $this->user->defaultPaymentMethod()->id, [
+        //         'off_session' => true,
+        //         'confirm' => true,
+        //         'capture_method' => 'manual',
+        //     ]);
+        // } catch (CardException $e) {
+        //     // toast()->danger()
+        //     dd($e);
+        //     // Get the payment intent status...
+        //     $status = $exception->payment->status;
+
+        //     dd($status);
+
+        //     // Check specific conditions...
+        //     if ($exception->payment->requiresPaymentMethod()) {
+        //         // ...
+        //     } elseif ($exception->payment->requiresConfirmation()) {
+        //         // ...
+        //     }
+        // }
+
+
+        try {
+            $payment = $this->user->charge(Currency::toPennies($this->pricing_total), $this->user->defaultPaymentMethod()->id, [
+                'off_session' => true,
+                'confirm' => true,
+                'payment_method_options' => [
+                    'card' => [
+                        'capture_method' => 'manual',
+                    ],
+                ],
+            ]);
+            toast()->success('good')->push();
+        } catch (\Laravel\Cashier\Exceptions\IncompletePayment $e) {
+            if ($e->payment->requiresPaymentMethod()) {
+                // ...
+                toast()->danger('User doesn\'t have payment method...')->push();
+                return;
+            } elseif ($e->payment->requiresConfirmation()) {
+                // ...
+                toast()->danger('Requires Authentication')->push();
+                return;
+            }
+        } catch (\Stripe\Exception\CardException $e) {
+            // Since it's a decline, \Stripe\Exception\CardException will be caught
+            toast()->danger($e->getError()->message)->push();
+            return;
+        } catch (\Stripe\Exception\RateLimitException $e) {
+            // Too many requests made to the API too quickly
+            toast()->danger($e->getError()->message)->push();
+            return;
+        } catch (\Stripe\Exception\InvalidRequestException $e) {
+            // Invalid parameters were supplied to Stripe's API
+            toast()->danger($e->getError()->message)->push();
+            return;
+        } catch (\Stripe\Exception\AuthenticationException $e) {
+            // Authentication with Stripe's API failed
+            // (maybe you changed API keys recently)
+            toast()->danger($e->getError()->message)->push();
+            return;
+        } catch (\Stripe\Exception\ApiConnectionException $e) {
+            // Network communication with Stripe failed
+            toast()->danger($e->getError()->message)->push();
+            return;
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            // Display a very generic error to the user, and maybe send
+            // yourself an email
+            toast()->danger($e->getError()->message)->push();
+            return;
+        } catch (\Exception $e) {
+            // Something else happened, completely unrelated to Stripe
+            toast()->danger($e->getMessage())->push();
+            return;
+        }
+
+
+        // Update Reservation's status
+        $this->reservation->status = 'pending';
+        $this->reservation->pricing_total = number_format($this->pricing_total, 2);
+        $this->reservation->payment_id = $payment->id;
+        $this->reservation->save();
+
+
+        return redirect('/success/' . $this->reservation->slug);
     }
 }
