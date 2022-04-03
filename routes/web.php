@@ -42,16 +42,7 @@ Route::name('host.')->prefix('host')->group(function () {
 
 Route::get('/test', function () {
 
-    // return auth()->user()->updateDefaultPaymentMethodFromStripe();
-    dd($user->charge(
-        App\Helpers\Currency::toPennies($this->pricing_total),
-        $setupIntent['payment_method'],
-        [
-            'off_session' => true,
-            'confirm' => true,
-        ]
-    ));
-    // dd($dd);
+    return view('mail.reservations.new');
 });
 
 Route::get('/logout', function () {

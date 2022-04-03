@@ -40,14 +40,21 @@
                 <div class="panel space-y-5">
                     <x-heading heading="About {{ $property->name ?? '' }}" />
                     <div class="flex flex-wrap gap-x-3 gap-y-2 text-xs font-semibold uppercase">
-                        <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">2 guests</span>
-                        <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">2 bedrooms</span>
-                        <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">2 beds</span>
-                        <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">2 bathrooms</span>
+                        <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">{{ $property->guest_count }} guests</span>
+                        <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">{{ $property->bedroom_count }} bedrooms</span>
+                        <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">{{ $property->bed_count }} beds</span>
+                        <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">{{ $property->bathroom_count }} bath</span>
+                        @if ($property)
+                            @if ($property->amenities)
+                                @foreach ($property->amenities as $amenity)
+                                    <span class="bg-muted-lightest text-muted-darkest rounded-lg px-2 py-1">{{ $amenity->text }}</span>
+                                @endforeach
+                            @endif
+                        @endif
                     </div>
                     <div class="space-y-5">
-                        <h3 class="mb-2 text-lg font-semibold leading-6">{{ $property->title ?? '' }}</h3>
-                        <p>{{ $property->description ?? '' }}</p>
+                        <h3 class="mb-2 text-lg font-semibold capitalize leading-6">{{ $property->listing_headline ?? '' }}</h3>
+                        <p>{{ $property->listing_description ?? '' }}</p>
                     </div>
                 </div>
             </div>
@@ -207,16 +214,46 @@
                 inlineMode: true,
                 minDays: 1, // number of nights + 1
                 minDate: new Date() - 1,
-                disallowLockDaysInRange: true,
                 tooltipText: {
                     one: 'night',
                     other: 'nights'
                 },
+                disallowLockDaysInRange: true,
+                // lockDaysFilter: (date1, date2, pickedDates) => {
+
+                //     if(!date2){
+
+                //     }
+
+                //     // if (!date2) {
+                //     //     const d = date1.getDay();
+
+                //     //     // return [6, 0].includes(d);
+                //     //     return false;
+                //     // }
+
+                //     // while (date1.toJSDate() < date2.toJSDate()) {
+                //     //     const day = date1.getDay();
+                //     //     isWeekend = [6, 0].includes(day);
+                //     //     if (isWeekend) {
+                //     //         return true;
+                //     //     }
+                //     //     date1.add(1, 'day');
+                //     // }
+
+                //     return false;
+                // },
                 tooltipNumber: (totalDays) => {
                     return totalDays - 1; // -1 to indicate nights (eg. 2 days selected = 1 night)
                 },
                 // setup runs when the calendar is initiated 
                 setup: (picker) => {
+                    // on.preselect runs when first date is selected
+                    picker.on('preselect', (date1, date2) => {
+                        if (date1 && !date2) {
+                            @this.lockCheckoutDates();
+                        }
+                    });
                     // on.selected runs when 2 dates are selected
                     picker.on('selected', (date1, date2) => {
                         // update the dates on the backend
@@ -243,6 +280,7 @@
         window.addEventListener('calendarLockDays', event => {
             dateRangesToLock = event.detail.dateRangesToLock;
             calendar.setLockDays(dateRangesToLock);
+            console.log(dateRangesToLock);
         })
     </script>
 

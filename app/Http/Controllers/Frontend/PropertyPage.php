@@ -101,11 +101,115 @@ class PropertyPage extends Component
         // update min nights
         $this->dispatchBrowserEvent('calendarUpdateMinNights', ['min_nights' => $this->property->min_nights]);
 
-        // lock existing reservation days
-        $dateRangesToLock = Reservation::all('checkin_date', 'checkout_date')->map(function ($reservation) {
-            return collect($reservation)->flatten()->toArray();
+        // lock checkin dates
+        $this->lockCheckinDates();
+
+        // dd($dateRangesToLock);
+
+
+
+
+        ///////////////////////////////////////////////
+
+
+
+
+
+        // // Now, split dates into checkin and checkout arrays
+        // $newRange = [];
+        // $prevRange = [];
+        // foreach ($dateRanges as $currentRange) {
+        //     if (!$prevRange) {
+        //         $newRange[] = $currentRange;
+        //     } elseif ($prevRange['checkout_date'] >= $currentRange['checkin_date']) {
+        //         $newRange[] = [
+        //             'checkin_date' => $prevRange['checkin_date'],
+        //             'checkout_date' => $currentRange['checkout_date'],
+        //         ];
+        //     }
+
+        //     $prevRange = $currentRange;
+        // }
+
+        // $dateRangesToLock = collect($newRange)->map(function ($range) {
+        //     // remove first day
+        //     $nights = Carbon::parse($range['checkin_date'])->diffInDays(Carbon::parse($range['checkout_date']));
+
+        //     if ($nights > 1) {
+        //         $range['checkin_date'] = Carbon::parse($range['checkin_date'])->addDay()->format('Y-m-d');
+
+        //         // remove last day
+        //         $range['checkout_date'] = Carbon::parse($range['checkout_date'])->subDay()->format('Y-m-d');
+        //     }
+
+        //     return collect($range)->flatten();
+        // })->toArray();
+
+        // $dateRangesToLock = $newRange;
+
+        // dd($dateRangesToLock);
+
+
+
+        // $dateRangesToLock = Reservation::where('checkout_date', '>=', Carbon::now()->format('Y-m-d'))->get(['checkin_date', 'checkout_date'])->map(function ($query) {
+        //     // remove first day
+        //     $query['checkin_date'] = Carbon::parse($query['checkin_date'])->addDay()->format('Y-m-d');
+
+        //     // remove last day
+        //     $query['checkout_date'] = Carbon::parse($query['checkout_date'])->subDay()->format('Y-m-d');
+
+        //     return collect($query)->flatten();
+        // })->toArray();
+
+
+        // // $dateRangesToLock = Reservation::all('checkin_date', 'checkout_date')->map(function ($reservation) {
+        // //     return collect($reservation)->flatten()->toArray();
+        // })->toArray();
+    }
+
+    public function lockCheckinDates()
+    {
+        // Setup date ranges to lock on mini calendar
+        // First, gather all reservation dates from database where check-out date is greater than today, order them by check-in date
+        $dateRanges = Reservation::where('status', '!=', null)->where('checkout_date', '>=', Carbon::now()->format('Y-m-d'))->orderBy('checkin_date')->get(['checkin_date', 'checkout_date'])->toArray();
+        $dateRangesToLock = [];
+
+        // merge all overlapping dates
+        $prevRange = [];
+        foreach ($dateRanges as $currentRange) {
+            if (!$prevRange) {
+                $dateRangesToLock[] = $currentRange;
+            } elseif ($prevRange['checkout_date'] >= $currentRange['checkin_date']) {
+                $dateRangesToLock[] = [
+                    'checkin_date' => $prevRange['checkin_date'],
+                    'checkout_date' => $currentRange['checkout_date'],
+                ];
+            }
+
+            $prevRange = $currentRange;
+        }
+
+        // Remove end of ranges to allow checkins
+        $dateRangesToLock = collect($dateRangesToLock)->map(function ($range) {
+            // remove first day
+
+            // remove last day
+            $range['checkout_date'] = Carbon::parse($range['checkout_date'])->subDay()->format('Y-m-d');
+
+            return collect($range)->flatten();
         })->toArray();
+
+        // collect and flatten array
+        $dateRangesToLock = collect($dateRangesToLock)->map(function ($range) {
+            return collect($range)->flatten();
+        })->toArray();
+
+        // send ranges to lock to the calendar
         $this->dispatchBrowserEvent('calendarLockDays', ['dateRangesToLock' => $dateRangesToLock]);
+    }
+
+    public function lockCheckoutDates()
+    {
         # code...
     }
 

@@ -7,7 +7,9 @@ use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Cashier\Exceptions\IncompletePayment;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Stripe\Exception\CardException;
 use Throwable;
@@ -216,42 +218,20 @@ class CheckoutPage extends Component
         $this->user->updateDefaultPaymentMethod($setupIntent['payment_method']);
 
         // Create payment hold
-
-
-        // try {
-        //     $this->user->charge(Currency::toPennies($this->pricing_total), $this->user->defaultPaymentMethod()->id, [
-        //         'off_session' => true,
-        //         'confirm' => true,
-        //         'capture_method' => 'manual',
-        //     ]);
-        // } catch (CardException $e) {
-        //     // toast()->danger()
-        //     dd($e);
-        //     // Get the payment intent status...
-        //     $status = $exception->payment->status;
-
-        //     dd($status);
-
-        //     // Check specific conditions...
-        //     if ($exception->payment->requiresPaymentMethod()) {
-        //         // ...
-        //     } elseif ($exception->payment->requiresConfirmation()) {
-        //         // ...
-        //     }
-        // }
-
-
         try {
             $payment = $this->user->charge(Currency::toPennies($this->pricing_total), $this->user->defaultPaymentMethod()->id, [
                 'off_session' => true,
                 'confirm' => true,
+
+                'statement_descriptor' => Str::limit($this->property->name . ' ' . $this->property->address_city . ' ' . $this->property->address_state, 22, ''),
+                'description' => 'This is a test',
+                // 'statement_descriptor_suffix' => 'defg',
                 'payment_method_options' => [
                     'card' => [
                         'capture_method' => 'manual',
                     ],
                 ],
             ]);
-            toast()->success('good')->push();
         } catch (\Laravel\Cashier\Exceptions\IncompletePayment $e) {
             if ($e->payment->requiresPaymentMethod()) {
                 // ...
@@ -300,6 +280,9 @@ class CheckoutPage extends Component
         $this->reservation->pricing_total = number_format($this->pricing_total, 2);
         $this->reservation->payment_id = $payment->id;
         $this->reservation->save();
+
+        // Send Reservation Created Email to guest
+        Mail::to($this->user->email)->queue(new \App\Mail\Guests\Reservations\ReservationCreatedEmail($this->reservation));
 
 
         return redirect('/success/' . $this->reservation->slug);

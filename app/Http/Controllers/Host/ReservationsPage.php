@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Host;
 
 use App\Helpers\Currency;
+use App\Mail\ReservationCreatedEmail;
 use App\Models\Property;
 use App\Models\Reservation;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Usernotnull\Toast\Concerns\WireToast;
 
@@ -44,7 +46,7 @@ class ReservationsPage extends Component
                 'status' => $reservation->status,
                 'title' => $title,
                 'start' => $reservation->checkin_date,
-                'end' => $reservation->checkout_date,
+                'end' => \Carbon\Carbon::parse($reservation->checkout_date)->addDay()->format('Y-m-d'), // add extra day
                 'color' => $reservation->property->calendar_color,
                 'url' => '/host/reservation/' . $reservation->id,
             ];
@@ -54,8 +56,7 @@ class ReservationsPage extends Component
 
     public function approveReservation(Reservation $reservation)
     {
-
-        // charge the  guest
+        // charge the guest
         try {
             $stripe = new \Stripe\StripeClient(
                 env('STRIPE_SECRET')
@@ -110,6 +111,7 @@ class ReservationsPage extends Component
         }
 
         // send guest email
+        Mail::to($reservation->user->email)->send(new \App\Mail\Guests\Reservations\ReservationApprovedEmail($reservation));
 
         // udpate status
         toast()->success($reservation->user->name . ' has been approved to stay at ' . $reservation->property->name)->push();

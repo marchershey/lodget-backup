@@ -82,8 +82,8 @@ import Litepicker from "litepicker";
 import "litepicker/dist/plugins/mobilefriendly";
 
 // Flatpickr - mini calendar
-import flatpickr from "flatpickr";
-window.flatpickr = flatpickr;
+// import flatpickr from "flatpickr";
+// window.flatpickr = flatpickr;
 
 // FullCalendar.io (v5) - big calendar
 // https://fullcalendar.io/

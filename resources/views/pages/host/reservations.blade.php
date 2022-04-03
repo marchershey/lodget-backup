@@ -146,6 +146,7 @@
                         url: reservation.url,
                         allDay: true
                     });
+                    console.log(reservation.end);
                 });
 
             })

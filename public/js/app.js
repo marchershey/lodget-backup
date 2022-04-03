@@ -30112,17 +30112,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var litepicker__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(litepicker__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var litepicker_dist_plugins_mobilefriendly__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! litepicker/dist/plugins/mobilefriendly */ "./node_modules/litepicker/dist/plugins/mobilefriendly.js");
 /* harmony import */ var litepicker_dist_plugins_mobilefriendly__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(litepicker_dist_plugins_mobilefriendly__WEBPACK_IMPORTED_MODULE_4__);
-Object(function webpackMissingModule() { var e = new Error("Cannot find module 'flatpickr'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-/* harmony import */ var _fullcalendar_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.js");
-/* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
-/* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.js");
-/* harmony import */ var _fullcalendar_list__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @fullcalendar/list */ "./node_modules/@fullcalendar/list/main.js");
-/* harmony import */ var _shopify_draggable__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @shopify/draggable */ "./node_modules/@shopify/draggable/lib/draggable.bundle.js");
-/* harmony import */ var _shopify_draggable__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_shopify_draggable__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var swiper_bundle__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! swiper/bundle */ "./node_modules/swiper/swiper-bundle.esm.js");
-/* harmony import */ var swiper_css_bundle__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! swiper/css/bundle */ "./node_modules/swiper/swiper-bundle.min.css");
-/* harmony import */ var _splidejs_splide__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @splidejs/splide */ "./node_modules/@splidejs/splide/dist/js/splide.esm.js");
-/* harmony import */ var _splidejs_splide_dist_css_themes_splide_default_min_css__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @splidejs/splide/dist/css/themes/splide-default.min.css */ "./node_modules/@splidejs/splide/dist/css/themes/splide-default.min.css");
+/* harmony import */ var _fullcalendar_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.js");
+/* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
+/* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.js");
+/* harmony import */ var _fullcalendar_list__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @fullcalendar/list */ "./node_modules/@fullcalendar/list/main.js");
+/* harmony import */ var _shopify_draggable__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @shopify/draggable */ "./node_modules/@shopify/draggable/lib/draggable.bundle.js");
+/* harmony import */ var _shopify_draggable__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_shopify_draggable__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var swiper_bundle__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! swiper/bundle */ "./node_modules/swiper/swiper-bundle.esm.js");
+/* harmony import */ var swiper_css_bundle__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! swiper/css/bundle */ "./node_modules/swiper/swiper-bundle.min.css");
+/* harmony import */ var _splidejs_splide__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @splidejs/splide */ "./node_modules/@splidejs/splide/dist/js/splide.esm.js");
+/* harmony import */ var _splidejs_splide_dist_css_themes_splide_default_min_css__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @splidejs/splide/dist/css/themes/splide-default.min.css */ "./node_modules/@splidejs/splide/dist/css/themes/splide-default.min.css");
 var _window$defaultCalend;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -30213,21 +30212,21 @@ window.addEventListener("maskAllElements", function (event) {
 
 
  // Flatpickr - mini calendar
-
-
-window.flatpickr = Object(function webpackMissingModule() { var e = new Error("Cannot find module 'flatpickr'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()); // FullCalendar.io (v5) - big calendar
+// import flatpickr from "flatpickr";
+// window.flatpickr = flatpickr;
+// FullCalendar.io (v5) - big calendar
 // https://fullcalendar.io/
 
 
 
 
 
-window.Calendar = _fullcalendar_core__WEBPACK_IMPORTED_MODULE_6__.Calendar;
-window.interactionPlugin = _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_7__["default"];
-window.dayGridPlugin = _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_8__["default"];
-window.listPlugin = _fullcalendar_list__WEBPACK_IMPORTED_MODULE_9__["default"];
+window.Calendar = _fullcalendar_core__WEBPACK_IMPORTED_MODULE_5__.Calendar;
+window.interactionPlugin = _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_6__["default"];
+window.dayGridPlugin = _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_7__["default"];
+window.listPlugin = _fullcalendar_list__WEBPACK_IMPORTED_MODULE_8__["default"];
 window.defaultCalendarOptions = (_window$defaultCalend = {
-  plugins: [_fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_7__["default"], _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_8__["default"], _fullcalendar_list__WEBPACK_IMPORTED_MODULE_9__["default"]],
+  plugins: [_fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_6__["default"], _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_7__["default"], _fullcalendar_list__WEBPACK_IMPORTED_MODULE_8__["default"]],
   aspectRatio: 2,
   displayEventTime: false
 }, _defineProperty(_window$defaultCalend, "displayEventTime", false), _defineProperty(_window$defaultCalend, "displayEventEnd", false), _defineProperty(_window$defaultCalend, "editable", false), _defineProperty(_window$defaultCalend, "headerToolbar", {
@@ -30245,8 +30244,8 @@ window.defaultCalendarOptions = (_window$defaultCalend = {
  */
 
 
-window.Sortable = _shopify_draggable__WEBPACK_IMPORTED_MODULE_10__.Sortable;
-window.Plugins = _shopify_draggable__WEBPACK_IMPORTED_MODULE_10__.Plugins;
+window.Sortable = _shopify_draggable__WEBPACK_IMPORTED_MODULE_9__.Sortable;
+window.Plugins = _shopify_draggable__WEBPACK_IMPORTED_MODULE_9__.Plugins;
 /**
  * Swiper JS - 8.0.7
  * https://swiperjs.com/get-started
@@ -30254,11 +30253,11 @@ window.Plugins = _shopify_draggable__WEBPACK_IMPORTED_MODULE_10__.Plugins;
 
 
 
-window.Swiper = swiper_bundle__WEBPACK_IMPORTED_MODULE_11__["default"]; // photo slider - splidejs
+window.Swiper = swiper_bundle__WEBPACK_IMPORTED_MODULE_10__["default"]; // photo slider - splidejs
 
 
 
-window.Splide = _splidejs_splide__WEBPACK_IMPORTED_MODULE_13__["default"];
+window.Splide = _splidejs_splide__WEBPACK_IMPORTED_MODULE_12__["default"];
 
 /***/ }),
 
