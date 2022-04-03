@@ -21,7 +21,13 @@ class Reservation extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Dont need this due to deffered loading 
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
+
+    // Dont need this due to deffered loading (aka wire:init="load")
     // public function getRouteKeyName()
     // {
     //     return 'slug';

@@ -54,12 +54,12 @@
                                         <span class="badge badge-yellow">Pending</span>
                                     </td>
                                     <td class="w-[250px]">
-                                        <div class="flex justify-end space-x-5" wire:loading.remove wire:target="approveReservation({{ $reservation->id }})">
-                                            <span class="text-link" wire:click="approveReservation({{ $reservation->id }})">Approve</span>
-                                            <span class="text-link">Reject</span>
+                                        <div class="flex justify-end space-x-5" wire:loading.remove wire:target="approvePendingReservation({{ $reservation->id }}), rejectPendingReservation">
+                                            <span class="text-link" wire:click="approvePendingReservation({{ $reservation->id }})">Approve</span>
+                                            <span class="text-link" wire:click="rejectPendingReservation({{ $reservation->id }})">Reject</span>
                                             <span class="text-link">View</span>
                                         </div>
-                                        <div wire:loading.flex class="items-center justify-end" wire:target="approveReservation({{ $reservation->id }})">
+                                        <div wire:loading.flex class="items-center justify-end" wire:target="approvePendingReservation({{ $reservation->id }}), rejectPendingReservation">
                                             <svg class="h-[23px] w-[23px] animate-spin text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -69,13 +69,13 @@
                                 </tr>
                             @endforeach
 
-                            {{-- Not Pending Reservations --}}
+                            {{-- Active Reservations --}}
                             <tr>
                                 <th colspan="5" class="border-b !bg-gray-100">
-                                    <span>Other Reservations</span>
+                                    <span>Active Reservations</span>
                                 </th>
                             </tr>
-                            @foreach ($reservations->where('status', '!=', 'pending') as $reservation)
+                            @foreach ($reservations->where('status', 'active') as $reservation)
                                 <tr class="border-b border-gray-200">
                                     <td><span class="text-link">{{ $reservation->user->name }}</span></td>
                                     <td><span class="text-link">{{ $reservation->property->name }}</span></td>
@@ -87,8 +87,35 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @if ($reservation->status == 'approved')
-                                            <span class="badge badge-green">Approved</span>
+                                        <span class="badge badge-green">Active</span>
+                                    </td>
+                                    <td class="flex justify-end space-x-7">
+                                        <span class="text-link">View</span>
+                                        <span class="text-link" wire:click="resetReservation({{ $reservation->id }})">Cancel</span>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                            {{-- Completed Reservations --}}
+                            <tr>
+                                <th colspan="5" class="border-b !bg-gray-100">
+                                    <span>Other Reservations</span>
+                                </th>
+                            </tr>
+                            @foreach ($reservations->where('status', '!=', 'pending')->where('status', '!=', 'active') as $reservation)
+                                <tr class="border-b border-gray-200">
+                                    <td><span class="text-link">{{ $reservation->user->name }}</span></td>
+                                    <td><span class="text-link">{{ $reservation->property->name }}</span></td>
+                                    <td>
+                                        <div class="flex space-x-1">
+                                            <span class="text-bold">{{ \Carbon\Carbon::parse($reservation->checkin_date)->format('M jS') }}</span>
+                                            <span>to</span>
+                                            <span class="text-bold">{{ \Carbon\Carbon::parse($reservation->checkout_date)->format('M jS') }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if ($reservation->status == 'rejected')
+                                            <span class="badge badge-gray">Rejected</span>
                                         @elseif($reservation->status == 'completed')
                                             <span class="badge badge-blue">Completed</span>
                                         @elseif($reservation->status == 'cancelled')
@@ -97,7 +124,7 @@
 
                                     </td>
                                     <td class="flex justify-end space-x-7">
-                                        <span class="text-link">View</span>
+                                        <span class="text-link" wire:click="resetReservation({{ $reservation->id }})">View</span>
                                     </td>
                                 </tr>
                             @endforeach

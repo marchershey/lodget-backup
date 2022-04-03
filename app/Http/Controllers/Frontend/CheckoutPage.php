@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Helpers\Currency;
+use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
@@ -219,12 +220,12 @@ class CheckoutPage extends Component
 
         // Create payment hold
         try {
-            $payment = $this->user->charge(Currency::toPennies($this->pricing_total), $this->user->defaultPaymentMethod()->id, [
+            $paymentIntent = $this->user->charge(Currency::toPennies($this->pricing_total), $this->user->defaultPaymentMethod()->id, [
                 'off_session' => true,
                 'confirm' => true,
 
                 'statement_descriptor' => Str::limit($this->property->name . ' ' . $this->property->address_city . ' ' . $this->property->address_state, 22, ''),
-                'description' => 'This is a test',
+                'description' => 'RES#' . $this->reservation->id,
                 // 'statement_descriptor_suffix' => 'defg',
                 'payment_method_options' => [
                     'card' => [
@@ -274,10 +275,21 @@ class CheckoutPage extends Component
             return;
         }
 
+        // Create a payment
+        $payment = new Payment();
+        $payment->reservation_id = $this->reservation->id;
+        $payment->user_id = $this->user->id;
+        $payment->status = 'pending';
+        $payment->payment_intent = $paymentIntent->id;
+        $payment->base_price = $this->pricing_base;
+        $payment->fees = $this->pricing_fees;
+        $payment->tax_price = $this->pricing_tax;
+        $payment->total_cents = Currency::toPennies($this->pricing_total);
+        $payment->save();
+
 
         // Update Reservation's status
         $this->reservation->status = 'pending';
-        $this->reservation->pricing_total = number_format($this->pricing_total, 2);
         $this->reservation->payment_id = $payment->id;
         $this->reservation->save();
 

@@ -171,7 +171,15 @@ class PropertyPage extends Component
     {
         // Setup date ranges to lock on mini calendar
         // First, gather all reservation dates from database where check-out date is greater than today, order them by check-in date
-        $dateRanges = Reservation::where('status', '!=', null)->where('checkout_date', '>=', Carbon::now()->format('Y-m-d'))->orderBy('checkin_date')->get(['checkin_date', 'checkout_date'])->toArray();
+        $dateRanges = Reservation
+            ::where('status', '!=', null)
+            ->where('status', '!=', 'failed')
+            ->where('status', '!=', 'cancelled')
+            ->where('status', '!=', 'rejected')
+            ->where('checkout_date', '>=', Carbon::now()->format('Y-m-d'))
+            ->orderBy('checkin_date')
+            ->get(['checkin_date', 'checkout_date'])
+            ->toArray();
         $dateRangesToLock = [];
 
         // merge all overlapping dates

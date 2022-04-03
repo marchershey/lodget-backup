@@ -77,7 +77,7 @@
             {{ config('app.name') }}
         </p>
         <p>
-            REFERENCE CODE: <strong>RES_{{ $reservation->id }}</strong>
+            REFERENCE CODE: <strong>RES#{{ $reservation->id }}</strong>
         </p>
     </x-slot>
 </x-layouts.email>

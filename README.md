@@ -14,17 +14,21 @@ docker run --rm -u "$(id -u):$(id -g)" -v $(pwd):/var/www/html -w /var/www/html 
 
 Done.
 
+## Production Setup
+
+1. `php artisan migrate:fresh --force`
+2. `php artisan storage:link`
+
 ## Docs
 
 #### Reservations
 
 **Status Types**
 
--   `billing` - The guest has selected dates, but has yet to enter billing details.
+-   `null` - The guest has selected dates, but has yet to enter billing details.
 -   `pending` - The reservation is awaiting host approval
 -   `failed` - The payment failed / waiting for guest to confirm
--   `active` - The reservation is approved, but not yet active _(guest hasn't arrived to the property yet)_
+-   `approved` - The reservation is approved, but not yet completed _(guest hasn't arrived to the property yet)_
 -   `completed` - The guest has **completed** their reseravtion
--   `cancelled` - The guest has **cancelled** their reservation and is awaiting refund
+-   `cancelled` - The guest has **cancelled** their reservation
 -   `rejected` - A host has rejected the reseravtion
--   `refunded` - The guest has cancelled their reservation and a refund has been issued

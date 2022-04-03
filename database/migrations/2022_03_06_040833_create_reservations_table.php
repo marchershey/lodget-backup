@@ -21,7 +21,6 @@ return new class extends Migration
             $table->integer('nights');
             $table->string('checkin_date');
             $table->string('checkout_date');
-            $table->string('pricing_total')->nullable();
             $table->string('payment_id')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
