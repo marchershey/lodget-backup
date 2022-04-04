@@ -55,6 +55,7 @@
                                     </td>
                                     <td class="w-[250px]">
                                         <div class="flex justify-end space-x-5" wire:loading.remove wire:target="approvePendingReservation({{ $reservation->id }}), rejectPendingReservation">
+
                                             <span class="text-link" wire:click="approvePendingReservation({{ $reservation->id }})">Approve</span>
                                             <span class="text-link" wire:click="rejectPendingReservation({{ $reservation->id }})">Reject</span>
                                             <span class="text-link">View</span>

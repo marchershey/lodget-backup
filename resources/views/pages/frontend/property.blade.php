@@ -210,6 +210,7 @@
                 element: document.getElementById('dates'),
                 parentEl: document.getElementById('calendar'),
                 zIndex: 1,
+                firstDay: 0,
                 singleMode: false,
                 inlineMode: true,
                 minDays: 1, // number of nights + 1

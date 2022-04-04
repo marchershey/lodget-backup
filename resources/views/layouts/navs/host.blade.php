@@ -34,7 +34,7 @@
         Properties
     </a>
 
-    <a href="#" class="{{ request()->is('host/guests*') ? 'nav-active' : 'nav-default' }}">
+    {{-- <a href="#" class="{{ request()->is('host/guests*') ? 'nav-active' : 'nav-default' }}">
         <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-300" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <circle cx="9" cy="7" r="4"></circle>
@@ -52,6 +52,6 @@
             <circle cx="12" cy="12" r="3"></circle>
         </svg>
         Settings
-    </a>
+    </a> --}}
 
 </nav>

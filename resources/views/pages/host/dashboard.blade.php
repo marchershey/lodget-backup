@@ -4,8 +4,12 @@
     </x-slot:title>
 
     <div class="section-spacing">
-        {{-- Recent Reservations --}}
         <div class="section">
+            There's nothing here yet.
+        </div>
+
+        {{-- Recent Reservations --}}
+        <div class="section hidden">
             <x-heading>Recent Reservations</x-heading>
             <div class="tables">
                 <table>
