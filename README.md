@@ -32,3 +32,38 @@ Done.
 -   `completed` - The guest has **completed** their reseravtion
 -   `cancelled` - The guest has **cancelled** their reservation
 -   `rejected` - A host has rejected the reseravtion
+
+fixing the approve/reject loading
+
+continue fixing mini calendar when selecting dates, lock checkin dates by default, then lock checkout dates after selecting first date
+create reservation view page
+remove unused navigation (guests, settings)
+create "under construction" placeholder for host dashboard
+create guests page
+create settings page
+create payments page
+create ability to for host to cash out
+create guest portal
+fix frontend
+fix authentication for host dashboard
+complete "to do" section of project
+
+test dev site
+
+Launch!
+
+NOTES
+
+Fluid nightly rate
+fluid minimum nights - ability to adujust min nights per day/week/month
+Searchable amenities / prefilled amenities
+remove pricings of properties on frontend
+change birthdate to "date of birth"
+add more information/verbage to registration
+25 years or older to register
+on reservation, place hold for HALF until 14 days until the reservation
+add terms of servicve to reservation page
+remove reservation approval
+remove instructions from property
+
+ability toos ags
